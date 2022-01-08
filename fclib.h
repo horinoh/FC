@@ -3,6 +3,16 @@
 
 #include "define.h"
 
+//!< BG
+void BGNameTableClear(const u16 addr)
+{
+    int i;
+    SET_PPUADDR(addr);
+    for(i = 0;i < TILE_WIDTH * TILE_HEIGHT;++i) {
+         PPUDATA = 0;
+    }
+}
+
 //!< スプライト
 struct Sprite
 {

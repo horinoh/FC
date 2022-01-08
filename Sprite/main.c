@@ -6,7 +6,7 @@
 
 const u8 Palette[] = { 
     COLOR_BLUE, //!< 背景色
-    COLOR_RED, 0x27, 0x07, //!< SPR パレット 0
+    COLOR_RED, COLOR_BEIGE, COLOR_BROWN, //!< SPR パレット 0
     0, //!< 未使用
     0, 0, 0, //!< SPR パレット 1
     0, //!< 未使用
@@ -130,9 +130,10 @@ u8 NesMain()
     NOISE_CTRL = 0;
     SNDCHANNEL = 0;
 
-    //!< BG クリア
-    SET_PPUADDR(PPU_BG_A_NAMETBL_ADDR);
-    for(i = 0;i < 0x800;++i) { PPUDATA = 0; }
+    //!< BG ネームテーブルクリア
+    BGNameTableClear(PPU_BG_A_NAMETBL_ADDR);
+    BGNameTableClear(PPU_BG_B_NAMETBL_ADDR);
+
     //!< BG スクロール
     PPUSCROLL_BG(0, 0);
     PPUCTRL = 0;

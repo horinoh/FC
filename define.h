@@ -4,7 +4,7 @@
 //!< CPU
 //!<    RAM [0x0000, 0x07ff] 2 Kbyte
 //!<        STACK       [0x0000, 0x03ff] 1 Kbyte
-//!<        GLOBAL VAR  [0x00400, 0x07ff] 1Kbyte
+//!<        GLOBAL VAR  [0x0400, 0x07ff] 1 Kbyte
 //!<    ROM [0x8000, 0xffff] 32 Kbyte
 
 //!< PPU
@@ -17,18 +17,30 @@
 
 #define COUNTOF(x) sizeof(x) / sizeof(x[0])
 #define BIT_ON(x) (1 << x)
-#define VSYNC() while(!(PPUSTATUS & PPUSTATUS_IN_VBLANK)) {}
+
 #define MAX(x, y) (x) > (y) ? (x) : (y)
 #define MIN(x, y) (x) > (y) ? (y) : (x)
+
+#define VSYNC() while(!IS_VBLANK) {}
 
 #define BG_WIDTH 256
 #define BG_HEIGHT 240
 #define TILE_WIDTH (BG_WIDTH >> 3)
 #define TILE_HEIGHT (BG_HEIGHT >> 3)
 
+#define BG_PAL0 0
+#define BG_PAL1 1
+#define BG_PAL2 2
+#define BG_PAL3 3
+#define BG_ATTR_LT(x) (x)
+#define BG_ATTR_RT(x) ((x) << 2)
+#define BG_ATTR_LB(x) ((x) << 4)
+#define BG_ATTR_RB(x) ((x) << 6)
+#define BG_ATTR(lt, rt, lb, rb) BG_ATTR_LT(lt) | BG_ATTR_RT(rt) | BG_ATTR_LB(lb) | BG_ATTR_RB(rb)
+
 #define SPR_MAX 64
 
-//!< カラー [0x00, 0x3f]
+//!< カラー [0x00, 0x3f] の 64 色分あるが、同じ色があったりするので実質は 52 色
 #define COLOR_BLACK      0x0f
 #define COLOR_RED        0x16
 #define COLOR_BLUE       0x12
@@ -39,6 +51,8 @@
 #define COLOR_GRAY       0x00
 #define COLOR_LIGHTGRAY  0x10 
 #define COLOR_WHITE      0x30
+#define COLOR_BEIGE      0x27
+#define COLOR_BROWN      0x07
 
 //!< CPUメモリ空間
 #define PPUCTRL *(u8 *)0x2000
@@ -109,17 +123,16 @@
 //!< Vブランク発生中 : PPU を直接制御する処理を行う 
 #define PPUSTATUS *(u8 *)0x2002
     //!< Bit7 Vブランク中かどうか
-    #define PPUSTATUS_VBLANK_MASK BIT_ON(7)
     #define PPUSTATUS_IN_VBLANK BIT_ON(7)
+    #define IS_VBLANK (PPUSTATUS & PPUSTATUS_IN_VBLANK)
     //!< Bit6 ラスタータイミングで使われる?
-    #define PPUSTATUS_SPR_COLLIDE_MASK BIT_ON(6)
     #define PPUSTATUS_SPR_COLLIDE_ON BIT_ON(6)
     //!< Bit5 同じラインに 8 個以上のスプライト
-    #define PPUSTATUS_SPR_OVERFLOW_MASK BIT_ON(5)
     #define PPUSTATUS_SPR_OVERFLOW_ON BIT_ON(5)
+    #define IS_SPR_OVERFLOW (PPUSTATUS & PPUSTATUS_SPR_OVERFLOW_ON)
     //!< Bit[0, 4] 画面描画ラインの状態
     #define PPUSTATUS_LINE_MASK BIT_ON(4)
-
+    
 //!< OAM(Object Attribute Memory)
 //!< 1. ワークアドレス(下位 8 ビットが 0x00 であること)に必要な情報を書き込んでおく
 //!< 2. Vブランクを待つ

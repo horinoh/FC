@@ -53,21 +53,21 @@ u8 NesMain()
     PULSE1_CTRL1 = 0;
     PULSE1_CTRL2 = 0;
     SNDCHANNEL = 0;
+    
+    //!< BG ネームテーブルクリア
+    BGNameTableClear(PPU_BG_A_NAMETBL_ADDR);
+    BGNameTableClear(PPU_BG_B_NAMETBL_ADDR);
 
-    //!< BG クリア
-    SET_PPUADDR(PPU_BG_A_NAMETBL_ADDR);
-    for(i = 0;i < (TILE_WIDTH * (TILE_HEIGHT + 1)) << 1;++i) {
-         PPUDATA = 0;
-    }
     //!< BG スクロール
     PPUSCROLL_BG(0, 0);
     PPUCTRL = PPUCTRL_SPR_PAT_TBL_1000 | PPUCTRL_BG_H(0);
 
-    //!< BG, SPR パレット
+    //!< BG パレット
     SET_PPUADDR(PPU_BG_PALETTE_ADDR);
     for(i = 0;i < COUNTOF(Palette);++i) {
         PPUDATA = Palette[i];
     }
+
     //!< BG パターン
     SET_PPUADDR(PPU_PATTERN_ADDR);
     for(i = 0;i < COUNTOF(PatternBG);++i) {
