@@ -8,8 +8,8 @@
 const u8 Palettes[] = { 
     BGCOLOR, 0x2b, 0x1b, 0x0b, //!< BGパレット0 : 緑系
     NOTUSED, 0x28, 0x18, 0x08, //!< BGパレット1 : 黄系
-    NOTUSED, 0x25, 0x15, 0x05, //!< BGパレット2 : 紫系
-    NOTUSED, 0x22, 0x12, 0x02, //!< BGパレット3 : 青系
+    NOTUSED, 0x26, 0x16, 0x06, //!< BGパレット2 : 赤系
+    NOTUSED, 0x24, 0x14, 0x04, //!< BGパレット3 : 紫系
 };
 #undef NOTUSED
 #undef BGCOLOR
@@ -21,66 +21,69 @@ const u8 Palettes[] = {
 #define C0 1
 #define C1 2
 #define C2 3
-//0, 0, 0, PT01, PT01, 0, 0, 0,
-//0, 0, PT01, PT01, PT01, PT01, 0, 0,
-//0, PT01, PT01, PT01, PT01, PT01, PT01, 0,
-//PT01, PT01, 0, PT01, PT01, 0, PT01, PT01,
-//PT01, PT01, PT01, PT01, PT01, PT01, PT01, PT01,
-//0, 0, PT01, 0, 0, PT01, 0, 0,
-//0, PT01, 0, PT01, PT01, 0, PT01, 0,
-//PT01, 0, PT01, 0, 0, PT01, 0, PT01,
+#define M0 1
+#define M1 2
+//0, 0, 0, 1, 1, 0, 0, 0,
+//0, 0, 1, 1, 1, 1, 0, 0,
+//0, 1, 1, 1, 1, 1, 1, 0,
+//1, 1, 0, 1, 1, 0, 1, 1,
+//1, 1, 1, 1, 1, 1, 1, 1,
+//0, 0, 1, 0, 0, 1, 0, 0,
+//0, 1, 0, 1, 1, 0, 1, 0,
+//1, 0, 1, 0, 0, 1, 0, 1,
 
-//0, 0, 0, 0, PT01, PT01, 0, 0,
-//0, 0, 0, 0, PT01, 0, 0, 0,
-//0, PT01, PT01, PT01, PT01, PT01, PT01, 0,
-//PT01, PT01, PT01, PT01, PT01, PT01, PT01, PT01,
-//PT01, 0, PT01, PT01, PT01, PT01, PT01, PT01,
-//PT01, 0, PT01, PT01, PT01, PT01, PT01, PT01,
-//PT01, PT01, PT01, PT01, PT01, PT01, PT01, PT01,
-//0, PT01, PT01, PT01, PT01, PT01, PT01, 0,
-
+//0, 0, 0, 0, 1, 1, 0, 0,
+//0, 0, 0, 0, 1, 0, 0, 0,
+//0, 1, 1, 1, 1, 1, 1, 0,
+//1, 1, 1, 1, 1, 1, 1, 1,
+//1, 0, 1, 1, 1, 1, 1, 1,
+//1, 0, 1, 1, 1, 1, 1, 1,
+//1, 1, 1, 1, 1, 1, 1, 1,
+//0, 1, 1, 1, 1, 1, 1, 0,
 const u8 Patterns[] = {
     //!< パターン 0
-    (BK & 1) << 7 | (BK & 1) << 6 | (BK & 1) << 5 | (C0 & 1) << 4 | (C0 & 1) << 3 | (BK & 1) << 2 | (BK & 1) << 1 | (BK & 1) << 0,
-    (BK & 1) << 7 | (BK & 1) << 6 | (C0 & 1) << 5 | (C0 & 1) << 4 | (C0 & 1) << 3 | (C0 & 1) << 2 | (BK & 1) << 1 | (BK & 1) << 0,
-    (BK & 1) << 7 | (C0 & 1) << 6 | (C0 & 1) << 5 | (C0 & 1) << 4 | (C0 & 1) << 3 | (C0 & 1) << 2 | (C0 & 1) << 1 | (BK & 1) << 0,
-    (C0 & 1) << 7 | (C0 & 1) << 6 | (BK & 1) << 5 | (C0 & 1) << 4 | (C0 & 1) << 3 | (BK & 1) << 2 | (C0 & 1) << 1 | (C0 & 1) << 0,
-    (C0 & 1) << 7 | (C0 & 1) << 6 | (C0 & 1) << 5 | (C0 & 1) << 4 | (C0 & 1) << 3 | (C0 & 1) << 2 | (C0 & 1) << 1 | (C0 & 1) << 0,
-    (BK & 1) << 7 | (BK & 1) << 6 | (C0 & 1) << 5 | (BK & 1) << 4 | (BK & 1) << 3 | (C0 & 1) << 2 | (BK & 1) << 1 | (BK & 1) << 0,
-    (BK & 1) << 7 | (C0 & 1) << 6 | (BK & 1) << 5 | (C0 & 1) << 4 | (C0 & 1) << 3 | (BK & 1) << 2 | (C0 & 1) << 1 | (BK & 1) << 0,
-    (C0 & 1) << 7 | (BK & 1) << 6 | (C0 & 1) << 5 | (BK & 1) << 4 | (BK & 1) << 3 | (C0 & 1) << 2 | (BK & 1) << 1 | (C0 & 1) << 0,
+    (BK & M0) << 7 | (BK & M0) << 6 | (BK & M0) << 5 | (C0 & M0) << 4 | (C0 & M0) << 3 | (BK & M0) << 2 | (BK & M0) << 1 | (BK & M0) << 0,
+    (BK & M0) << 7 | (BK & M0) << 6 | (C0 & M0) << 5 | (C0 & M0) << 4 | (C0 & M0) << 3 | (C0 & M0) << 2 | (BK & M0) << 1 | (BK & M0) << 0,
+    (BK & M0) << 7 | (C0 & M0) << 6 | (C0 & M0) << 5 | (C0 & M0) << 4 | (C0 & M0) << 3 | (C0 & M0) << 2 | (C0 & M0) << 1 | (BK & M0) << 0,
+    (C0 & M0) << 7 | (C0 & M0) << 6 | (BK & M0) << 5 | (C0 & M0) << 4 | (C0 & M0) << 3 | (BK & M0) << 2 | (C0 & M0) << 1 | (C0 & M0) << 0,
+    (C0 & M0) << 7 | (C0 & M0) << 6 | (C0 & M0) << 5 | (C0 & M0) << 4 | (C0 & M0) << 3 | (C0 & M0) << 2 | (C0 & M0) << 1 | (C0 & M0) << 0,
+    (BK & M0) << 7 | (BK & M0) << 6 | (C0 & M0) << 5 | (BK & M0) << 4 | (BK & M0) << 3 | (C0 & M0) << 2 | (BK & M0) << 1 | (BK & M0) << 0,
+    (BK & M0) << 7 | (C0 & M0) << 6 | (BK & M0) << 5 | (C0 & M0) << 4 | (C0 & M0) << 3 | (BK & M0) << 2 | (C0 & M0) << 1 | (BK & M0) << 0,
+    (C0 & M0) << 7 | (BK & M0) << 6 | (C0 & M0) << 5 | (BK & M0) << 4 | (BK & M0) << 3 | (C0 & M0) << 2 | (BK & M0) << 1 | (C0 & M0) << 0,
 
-    (BK & 2) << 7 | (BK & 2) << 6 | (BK & 2) << 5 | (C0 & 2) << 4 | (C0 & 2) << 3 | (BK & 2) << 2 | (BK & 2) << 1 | (BK & 2) << 0,
-    (BK & 2) << 7 | (BK & 2) << 6 | (C0 & 2) << 5 | (C0 & 2) << 4 | (C0 & 2) << 3 | (C0 & 2) << 2 | (BK & 2) << 1 | (BK & 2) << 0,
-    (BK & 2) << 7 | (C0 & 2) << 6 | (C0 & 2) << 5 | (C0 & 2) << 4 | (C0 & 2) << 3 | (C0 & 2) << 2 | (C0 & 2) << 1 | (BK & 2) << 0,
-    (C0 & 2) << 7 | (C0 & 2) << 6 | (BK & 2) << 5 | (C0 & 2) << 4 | (C0 & 2) << 3 | (BK & 2) << 2 | (C0 & 2) << 1 | (C0 & 2) << 0,
-    (C0 & 2) << 7 | (C0 & 2) << 6 | (C0 & 2) << 5 | (C0 & 2) << 4 | (C0 & 2) << 3 | (C0 & 2) << 2 | (C0 & 2) << 1 | (C0 & 2) << 0,
-    (BK & 2) << 7 | (BK & 2) << 6 | (C0 & 2) << 5 | (BK & 2) << 4 | (BK & 2) << 3 | (C0 & 2) << 2 | (BK & 2) << 1 | (BK & 2) << 0,
-    (BK & 2) << 7 | (C0 & 2) << 6 | (BK & 2) << 5 | (C0 & 2) << 4 | (C0 & 2) << 3 | (BK & 2) << 2 | (C0 & 2) << 1 | (BK & 2) << 0,
-    (C0 & 2) << 7 | (BK & 2) << 6 | (C0 & 2) << 5 | (BK & 2) << 4 | (BK & 2) << 3 | (C0 & 2) << 2 | (BK & 2) << 1 | (C0 & 2) << 0,
+    (BK & M1) << 7 | (BK & M1) << 6 | (BK & M1) << 5 | (C0 & M1) << 4 | (C0 & M1) << 3 | (BK & M1) << 2 | (BK & M1) << 1 | (BK & M1) << 0,
+    (BK & M1) << 7 | (BK & M1) << 6 | (C0 & M1) << 5 | (C0 & M1) << 4 | (C0 & M1) << 3 | (C0 & M1) << 2 | (BK & M1) << 1 | (BK & M1) << 0,
+    (BK & M1) << 7 | (C0 & M1) << 6 | (C0 & M1) << 5 | (C0 & M1) << 4 | (C0 & M1) << 3 | (C0 & M1) << 2 | (C0 & M1) << 1 | (BK & M1) << 0,
+    (C0 & M1) << 7 | (C0 & M1) << 6 | (BK & M1) << 5 | (C0 & M1) << 4 | (C0 & M1) << 3 | (BK & M1) << 2 | (C0 & M1) << 1 | (C0 & M1) << 0,
+    (C0 & M1) << 7 | (C0 & M1) << 6 | (C0 & M1) << 5 | (C0 & M1) << 4 | (C0 & M1) << 3 | (C0 & M1) << 2 | (C0 & M1) << 1 | (C0 & M1) << 0,
+    (BK & M1) << 7 | (BK & M1) << 6 | (C0 & M1) << 5 | (BK & M1) << 4 | (BK & M1) << 3 | (C0 & M1) << 2 | (BK & M1) << 1 | (BK & M1) << 0,
+    (BK & M1) << 7 | (C0 & M1) << 6 | (BK & M1) << 5 | (C0 & M1) << 4 | (C0 & M1) << 3 | (BK & M1) << 2 | (C0 & M1) << 1 | (BK & M1) << 0,
+    (C0 & M1) << 7 | (BK & M1) << 6 | (C0 & M1) << 5 | (BK & M1) << 4 | (BK & M1) << 3 | (C0 & M1) << 2 | (BK & M1) << 1 | (C0 & M1) << 0,
 
     //!< パターン 1
-    (BK & 1) << 7 | (BK & 1) << 6 | (BK & 1) << 5 | (BK & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (BK & 1) << 1 | (BK & 1) << 0,
-    (BK & 1) << 7 | (BK & 1) << 6 | (BK & 1) << 5 | (BK & 1) << 4 | (C1 & 1) << 3 | (BK & 1) << 2 | (BK & 1) << 1 | (BK & 1) << 0,
-    (BK & 1) << 7 | (C1 & 1) << 6 | (C1 & 1) << 5 | (C1 & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (C1 & 1) << 1 | (BK & 1) << 0,
-    (C1 & 1) << 7 | (C1 & 1) << 6 | (C1 & 1) << 5 | (C1 & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (C1 & 1) << 1 | (C1 & 1) << 0,
-    (C1 & 1) << 7 | (BK & 1) << 6 | (C1 & 1) << 5 | (C1 & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (C1 & 1) << 1 | (C1 & 1) << 0,
-    (C1 & 1) << 7 | (BK & 1) << 6 | (C1 & 1) << 5 | (C1 & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (C1 & 1) << 1 | (C1 & 1) << 0,
-    (C1 & 1) << 7 | (C1 & 1) << 6 | (C1 & 1) << 5 | (C1 & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (C1 & 1) << 1 | (C1 & 1) << 0,
-    (BK & 1) << 7 | (C1 & 1) << 6 | (C1 & 1) << 5 | (C1 & 1) << 4 | (C1 & 1) << 3 | (C1 & 1) << 2 | (C1 & 1) << 1 | (BK & 1) << 0,
+    (BK & M0) << 7 | (BK & M0) << 6 | (BK & M0) << 5 | (BK & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (BK & M0) << 1 | (BK & M0) << 0,
+    (BK & M0) << 7 | (BK & M0) << 6 | (BK & M0) << 5 | (BK & M0) << 4 | (C1 & M0) << 3 | (BK & M0) << 2 | (BK & M0) << 1 | (BK & M0) << 0,
+    (BK & M0) << 7 | (C1 & M0) << 6 | (C1 & M0) << 5 | (C1 & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (C1 & M0) << 1 | (BK & M0) << 0,
+    (C1 & M0) << 7 | (C1 & M0) << 6 | (C1 & M0) << 5 | (C1 & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (C1 & M0) << 1 | (C1 & M0) << 0,
+    (C1 & M0) << 7 | (BK & M0) << 6 | (C1 & M0) << 5 | (C1 & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (C1 & M0) << 1 | (C1 & M0) << 0,
+    (C1 & M0) << 7 | (BK & M0) << 6 | (C1 & M0) << 5 | (C1 & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (C1 & M0) << 1 | (C1 & M0) << 0,
+    (C1 & M0) << 7 | (C1 & M0) << 6 | (C1 & M0) << 5 | (C1 & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (C1 & M0) << 1 | (C1 & M0) << 0,
+    (BK & M0) << 7 | (C1 & M0) << 6 | (C1 & M0) << 5 | (C1 & M0) << 4 | (C1 & M0) << 3 | (C1 & M0) << 2 | (C1 & M0) << 1 | (BK & M0) << 0,
 
-    (BK & 2) << 7 | (BK & 2) << 6 | (BK & 2) << 5 | (BK & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (BK & 2) << 1 | (BK & 2) << 0,
-    (BK & 2) << 7 | (BK & 2) << 6 | (BK & 2) << 5 | (BK & 2) << 4 | (C1 & 2) << 3 | (BK & 2) << 2 | (BK & 2) << 1 | (BK & 2) << 0,
-    (BK & 2) << 7 | (C1 & 2) << 6 | (C1 & 2) << 5 | (C1 & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (C1 & 2) << 1 | (BK & 2) << 0,
-    (C1 & 2) << 7 | (C1 & 2) << 6 | (C1 & 2) << 5 | (C1 & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (C1 & 2) << 1 | (C1 & 2) << 0,
-    (C1 & 2) << 7 | (BK & 2) << 6 | (C1 & 2) << 5 | (C1 & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (C1 & 2) << 1 | (C1 & 2) << 0,
-    (C1 & 2) << 7 | (BK & 2) << 6 | (C1 & 2) << 5 | (C1 & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (C1 & 2) << 1 | (C1 & 2) << 0,
-    (C1 & 2) << 7 | (C1 & 2) << 6 | (C1 & 2) << 5 | (C1 & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (C1 & 2) << 1 | (C1 & 2) << 0,
-    (BK & 2) << 7 | (C1 & 2) << 6 | (C1 & 2) << 5 | (C1 & 2) << 4 | (C1 & 2) << 3 | (C1 & 2) << 2 | (C1 & 2) << 1 | (BK & 2) << 0,
+    (BK & M1) << 7 | (BK & M1) << 6 | (BK & M1) << 5 | (BK & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (BK & M1) << 1 | (BK & M1) << 0,
+    (BK & M1) << 7 | (BK & M1) << 6 | (BK & M1) << 5 | (BK & M1) << 4 | (C1 & M1) << 3 | (BK & M1) << 2 | (BK & M1) << 1 | (BK & M1) << 0,
+    (BK & M1) << 7 | (C1 & M1) << 6 | (C1 & M1) << 5 | (C1 & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (C1 & M1) << 1 | (BK & M1) << 0,
+    (C1 & M1) << 7 | (C1 & M1) << 6 | (C1 & M1) << 5 | (C1 & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (C1 & M1) << 1 | (C1 & M1) << 0,
+    (C1 & M1) << 7 | (BK & M1) << 6 | (C1 & M1) << 5 | (C1 & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (C1 & M1) << 1 | (C1 & M1) << 0,
+    (C1 & M1) << 7 | (BK & M1) << 6 | (C1 & M1) << 5 | (C1 & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (C1 & M1) << 1 | (C1 & M1) << 0,
+    (C1 & M1) << 7 | (C1 & M1) << 6 | (C1 & M1) << 5 | (C1 & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (C1 & M1) << 1 | (C1 & M1) << 0,
+    (BK & M1) << 7 | (C1 & M1) << 6 | (C1 & M1) << 5 | (C1 & M1) << 4 | (C1 & M1) << 3 | (C1 & M1) << 2 | (C1 & M1) << 1 | (BK & M1) << 0,
 
     //!< ...
     //!< パターン 256
 };
+#undef M1
+#undef M0
 #undef C2
 #undef C1
 #undef C0
@@ -139,38 +142,38 @@ const u8 NameTablesB[] = {
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
     
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
-    PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00,  PT00, PT00, PT00, PT00, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
+    PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01,  PT01, PT01, PT01, PT01, 
 };
 #undef PTff
 //...
@@ -188,23 +191,23 @@ const u8 NameTablesB[] = {
 #define PL3 BG_PAL3
 const u8 AttributesA[] = {
     BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-};
-const u8 AttributesB[] = {
     BG_ATTR(PL0, PL1, PL2, PL3), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
     BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL3, PL2, PL1, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
     BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL0, PL1, PL2, PL3), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
     BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL3, PL2, PL1, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+};
+const u8 AttributesB[] = {
     BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL1, PL1, PL1, PL1), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL2, PL2, PL2, PL2), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL3, PL3, PL3, PL3), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
     BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
-    BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL1, PL1, PL1, PL1), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL2, PL2, PL2, PL2), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
+    BG_ATTR(PL3, PL3, PL3, PL3), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0), BG_ATTR(PL0, PL0, PL0, PL0),
 };
 #undef PL3
 #undef PL2
@@ -270,6 +273,15 @@ u8 NesMain()
         PPUDATA = AttributesB[i];
     }
 
+    x = TILE_WIDTH >> 1;
+    y = TILE_HEIGHT >> 1;
+    BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, x - 1, y, 1);
+    BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, x + 0, y, 1);
+    BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, x + 1, y, 1);
+    BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, x, y - 1, 1);
+    BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, x, y + 0, 1);
+    BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, x, y + 1, 1);
+
     //!< 表示オン
     PPUMASK = PPUMASK_BG_DISP_ON | PPUMASK_BG_EDGE_ON;
 
@@ -286,6 +298,10 @@ u8 NesMain()
         if(BUTTON_START & KeyState){}
 
         VSYNC();
+
+        BGPutNameTable(PPU_BG_A_NAMETBL_ADDR,  8, 8, 1);
+        BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, 16, 8, 1);
+        BGPutNameTable(PPU_BG_A_NAMETBL_ADDR, 24, 8, 1);
 
         //!< PPU 制御後、BG スクロール座標が変わってしまうので再設定する必要がある
         PPUSCROLL_BG(x, y);

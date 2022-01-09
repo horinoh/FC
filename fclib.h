@@ -12,6 +12,11 @@ void BGNameTableClear(const u16 addr)
          PPUDATA = 0;
     }
 }
+void BGPutNameTable(const u16 addr, const u16 x, const u16 y, const u8 patternNo)
+{
+    SET_PPUADDR(addr + x + ((u16)(y<<5)));
+    PPUDATA = patternNo;
+}
 
 //!< スプライト
 struct Sprite
