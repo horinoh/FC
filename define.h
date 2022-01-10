@@ -21,7 +21,7 @@
 #define MAX(x, y) (x) > (y) ? (x) : (y)
 #define MIN(x, y) (x) > (y) ? (y) : (x)
 
-#define PATTERN(v, m, b) (((v) & (m)) ? 1 : 0) << (b)
+#define PATTERN(col, mask, bit) (((col) & (mask)) ? 1 : 0) << (bit)
 
 #define VSYNC() while(!IS_VBLANK) {}
 

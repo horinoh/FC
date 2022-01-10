@@ -30,9 +30,11 @@ const u8 Palettes[] = {
 #define C0 1
 #define C1 2
 #define C2 3
+
 #define M0 1
 #define M1 2
-#define P(v, m, b) PATTERN(v, m, b)
+
+#define P(c, m, b) PATTERN(c, m, b)
 //0,0,0,0,0,1,1,1, 1,1,0,0,0,0,0,0,
 //0,0,0,0,1,1,1,1, 1,1,1,1,1,0,0,0,
 //0,0,0,0,3,3,3,2, 2,3,2,0,0,0,0,0,
@@ -51,19 +53,6 @@ const u8 Palettes[] = {
 //0,0,0,3,3,3,0,0, 0,0,3,3,3,0,0,0,
 //0,0,3,3,3,3,0,0, 0,0,3,3,3,3,0,0,
 const u8 Patterns[] = {
-#if 0
-    0x03,0x07,0x07,0x07,0x07,0x07,0x03,0x3d,
-    0x00,0x00,0x01,0x03,0x01,0x01,0x01,0x3f, 
-    
-    0xe0,0xf0,0xe0,0xe0,0xf0,0xf3,0xc7,0xbe,
-    0x00,0x00,0xe0,0xa0,0xf0,0xf3,0xc7,0xfe, 
-    
-    0x78,0xe0,0xc7,0x00,0x7c,0x7c,0x60,0x40,
-    0x7f,0xe7,0xc0,0x07,0x1e,0x3c,0x20,0x00, 
-    
-    0x1c,0x00,0xe8,0x0c,0x0c,0x0e,0x0f,0x00,
-    0xfc,0xe0,0x18,0xfc,0x0c,0x06,0x00,0x00, 
-#else
     //!< パターン 0
     P(TR, M0, 7) | P(TR, M0, 6) | P(TR, M0, 5) | P(TR, M0, 4) | P(TR, M0, 3) | P(C0, M0, 2) | P(C0, M0, 1) | P(C0, M0, 0), 
     P(TR, M0, 7) | P(TR, M0, 6) | P(TR, M0, 5) | P(TR, M0, 4) | P(C0, M0, 3) | P(C0, M0, 2) | P(C0, M0, 1) | P(C0, M0, 0), 
@@ -139,7 +128,6 @@ const u8 Patterns[] = {
     P(TR, M1, 7) | P(C0, M1, 6) | P(C0, M1, 5) | P(C0, M1, 4) | P(TR, M1, 3) | P(TR, M1, 2) | P(TR, M1, 1) | P(TR, M1, 0),
     P(TR, M1, 7) | P(TR, M1, 6) | P(C2, M1, 5) | P(C2, M1, 4) | P(C2, M1, 3) | P(TR, M1, 2) | P(TR, M1, 1) | P(TR, M1, 0),
     P(TR, M1, 7) | P(TR, M1, 6) | P(C2, M1, 5) | P(C2, M1, 4) | P(C2, M1, 3) | P(C2, M1, 2) | P(TR, M1, 1) | P(TR, M1, 0),
-#endif
 };
 #undef P
 #undef M1
@@ -155,7 +143,7 @@ u8 NesMain()
     u8 KeyState = 0;
     u8 x, y;
     Sprite* sp = (Sprite *)SPR_WORK_ADDR;
-    Sprite16 sp16[1];
+    Sprite16 sp16[SPR_MAX >> 2];
 
     VSYNC();
     
@@ -195,16 +183,18 @@ u8 NesMain()
     for(i = 0;i < SPR_MAX;++i) {
         SpriteRemove(&sp[i]);
         sp[i].TileNo = i & 3;
-        sp[i].Attribute = SPR_ATTR_PALETTE(0) | SPR_ATTR_PRI_FRONT_OF_BG;
+        //sp[i].Attribute = SPR_ATTR_PALETTE(0) | SPR_ATTR_PRI_FRONT_OF_BG;
         //sp[i].Attribute = SPR_ATTR_PALETTE(0) | SPR_ATTR_PRI_FRONT_OF_BG | SPR_ATTR_HFLIP_ON;
         //sp[i].Attribute = SPR_ATTR_PALETTE(0) | SPR_ATTR_PRI_FRONT_OF_BG | SPR_ATTR_VFLIP_ON;
         //sp[i].Attribute = SPR_ATTR_PALETTE(0) | SPR_ATTR_PRI_FRONT_OF_BG | SPR_ATTR_HFLIP_ON | SPR_ATTR_VFLIP_ON;
+        sp[i].Attribute = SPR_ATTR_PALETTE(0) | SPR_ATTR_PRI_FRONT_OF_BG | ((i & 4) ? SPR_ATTR_HFLIP_ON : 0);
     }
 
-    x = BG_WIDTH >> 1;
-    y = BG_HEIGHT >> 1;
-    Sprite16Init(&sp16[0], &sp[0]);
-    Sprite16SetPosCC(& sp16[0], x, y);
+    x = y = 0;
+    for(i = 0;i < COUNTOF(sp16);++i){
+        Sprite16Init(&sp16[i], &sp[i << 2]);
+        Sprite16SetPosCC(&sp16[i], i << 4, (i << 3));
+    }
 
     //!< 表示オン
     PPUMASK = PPUMASK_SPR_DISP_ON | PPUMASK_SPR_EDGE_ON;
@@ -217,7 +207,7 @@ u8 NesMain()
         if(BUTTON_RIGHT & KeyState){ ++x; }
 
         for(i = 0;i < COUNTOF(sp16);++i) {
-            Sprite16SetPosCC(&sp16[i], x, y);
+            Sprite16SetPosCC(&sp16[i], x + (i << 4), y + (i << 3));
         }
 
         VSYNC();

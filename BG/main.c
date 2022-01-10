@@ -21,9 +21,11 @@ const u8 Palettes[] = {
 #define C0 1
 #define C1 2
 #define C2 3
+
 #define M0 1
 #define M1 2
-#define P(v, m, b) PATTERN(v, m, b)
+
+#define P(c, m, b) PATTERN(c, m, b)
 //0, 0, 0, 1, 1, 0, 0, 0,
 //0, 0, 1, 1, 1, 1, 0, 0,
 //0, 1, 1, 1, 1, 1, 1, 0,
