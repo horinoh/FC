@@ -1,0 +1,60 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Assemble neslib",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -c ../neslib/crt0.s",
+        },
+        {
+            "label": "Assemble Resource",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -c chr.s",
+        },
+        {
+            "label": "Compile FC",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -c main.c"
+        },
+        {
+            "label": "Link FC",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom ../neslib/crt0.o main.o nes.lib"
+        },
+        {
+            "label": "Link with resource FC",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -C buildRes.cfg -o nes.rom ../neslib/crt0.o chr.o main.o nes.lib",
+        },
+        {
+            "label": "Execute FC",
+            "type": "shell",
+            "command": "nestopia .\\nes.rom"
+        },
+        {
+            "label": "Build and execute FC",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Assemble neslib",
+                "Compile FC",
+                "Link FC",
+                "Execute FC"
+            ]
+        },
+        {
+            "label": "Convert, build and execute FC",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                //"Conert",
+                "Assemble Resource",
+                "Compile FC",
+                "Link with resource FC",
+                "Execute FC"
+            ]
+        }
+    ]
+}

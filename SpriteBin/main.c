@@ -4,24 +4,7 @@
 //!< ここでは [0x700, 0x7ff] を使用することとする
 #define SPR_WORK_ADDR 0x700
 
-//!<
-//!< 【パレット】
-//!< 
-#define TRCOLOR COLOR_SKYBLUE //!< 透明色
-#define NOTUSED 0
-static const u8 Palettes[] = { 
-    TRCOLOR, COLOR_RED, COLOR_BEIGE, COLOR_BROWN, //!< パレット 0
-    NOTUSED, 0, 0, 0, //!< パレット 1
-    NOTUSED, 0, 0, 0, //!< パレット 2
-    NOTUSED, 0, 0, 0, //!< パレット 3
-
-    TRCOLOR, COLOR_RED, COLOR_BEIGE, COLOR_BROWN, //!< パレット 0
-    NOTUSED, 0, 0, 0, //!< パレット 1
-    NOTUSED, 0, 0, 0, //!< パレット 2
-    NOTUSED, 0, 0, 0, //!< パレット 3
-};
-#undef NOTUSED
-#undef BGCOLOR
+extern const u8 palette[16][16];
 
 //!<
 //!< 【パターン】 0x8 x 256 個まで
@@ -171,15 +154,19 @@ u8 NesMain()
     SpriteClear(sp);
 
     //!< パレット
+    #if 1
     SET_PPUADDR(PPU_SPR_PALETTE_ADDR);
-    for(i = 0;i < COUNTOF(Palettes);++i) {
-        PPUDATA = Palettes[i];
+    for(i = 0;i < COUNTOF(palette);++i) {
+        PPUDATA = palette[i];
     }
+    #endif
     //!< パターン
+    #if 0
     SET_PPUADDR(PPU_PATTERN_ADDR);
     for(i = 0;i < COUNTOF(Patterns);++i) {
         PPUDATA = Patterns[i];
     }
+    #endif
     for(i = 0;i < SPR_MAX;++i) {
         SpriteRemove(&sp[i]);
         sp[i].TileNo = i & 3;

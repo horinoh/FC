@@ -1,0 +1,61 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Asm FC",
+            "type": "shell",
+            "command": "cl65 -t none -c startup.asm -c data.asm"
+        },
+        {
+            "label": "Compile FC",
+            "type": "shell",
+            "command": "cl65 -t none -c -O main.c"
+        },
+        {
+            "label": "Convert",
+            "type": "shell",
+            "command": "..\\ImageConverter\\x64\\Debug\\ImageConverter.exe FC .\\res",
+            //"command": "..\\ImageConverter\\x64\\Release\\ImageConverter.exe FC .\\res",
+        },
+        {
+            "label": "Link FC",
+            "type": "shell",
+            "command": "ld65 -o nes.rom --config build.cfg --obj startup.o data.o main.o --lib nes.lib"
+        },
+        {
+            "label": "Execute FC",
+            "type": "shell",
+            "command": "nestopia .\\nes.rom"
+        },
+        {
+            "label": "Build FC",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Asm FC",
+                "Compile FC",
+                "Link FC"
+            ]
+        },
+        {
+            "label": "Build and execute FC",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build FC",
+                "Execute FC"
+            ]
+        },
+        {
+            "label": "Convert, build and execute FC",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Convert",
+                "Build and execute FC",
+            ]
+        }
+    ]
+}
