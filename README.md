@@ -50,11 +50,18 @@
         CHARS:    load = CHR,            type = rw;
     }
     ~~~
- - バイナリデータ (XXX.s) を用意し。アセンブル & リンクして使用
+ - XXX.s を用意し、アセンブル & リンクして使用
     ~~~
+    ; XXX.s
     .segment "CHARS"
     .byte $00,$00,$00,$00,$00,$00,$00,$00
     ...
+    ~~~
+ - YYY.bin, YYY.s を用意し、アセンブル & リンクして使用
+    ~~~
+    ; YYY.s
+    .segment "CHARS"
+	.incbin "YYY.bin"
     ~~~
 
 ## 実行

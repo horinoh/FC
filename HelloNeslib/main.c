@@ -1,67 +1,124 @@
-#include <string.h>
-#include <stdint.h>
+#include "../nes.h"
 
-#include "../neslib/neslib.h"
+//#define USE_SPLIT
 
-//!< oam_off
-typedef uint8_t u8;
-#pragma bss-name (push,"ZEROPAGE")
-#pragma data-name (push,"ZEROPAGE")
-uint8_t oam_off;
-#pragma data-name(pop)
-#pragma bss-name (pop)
-
-/*
-CPU
-[0x0000, 0x00ff]    ゼロページRAM
-[0x0100, 0x01ff]    スタックRAM
-[0x0200, 0x07ff]    RAM
-[0x2000, 0x2007]    PPUレジスタ
-[0x4000, 0x401f]    APU, IOレジスタ
-[0x6000, 0x7fff]    バックアップRAM
-[0x8000, 0xffff]    ROM      
-*/
-/*
-PPU
-[0x0000, 0x0fff]    パターンテーブル0
-[0x1000, 0x1fff]    パターンテーブル1
-[0x2000, 0x23bf]    ネームテーブル0
-[0x23c0, 0x23ff]    アトリビュートテーブル0
-[0x2400, 0x27bf]    ネームテーブル1
-[0x27c0, 0x27ff]    アトリビュートテーブル1
-[0x2800, 0x2bbf]    ネームテーブル2
-[0x2bc0, 0x2bff]    アトリビュートテーブル2
-[0x2c00, 0x2fbf]    ネームテーブル3
-[0x2fc0, 0x2fff]    アトリビュートテーブル3
-[0x3f00, 0x3f0f]    BG パレット
-[0x3f10, 0x3f1f]    スプライトパレット
-
-画面        256 x 240
-色          64 色(56 ユニーク)
-タイル      8 x 8、3 + 1 色
-パターン    512
-マップ      32 x 60 or 64 x 30
-スプライト  8 x 8 or 8 x 16、64 枚
-*/
+void put_str(const uint16_t adr, const char* str) 
+{
+    vram_adr(adr);
+    vram_write((const uint8_t*)str, strlen(str));
+}
 
 void main()
 {
-    const char* Str = "Hello World";
+    const char Palette[] = {
+        0x03, 0x11, 0x30, 0x27, //!< BG Pal0
+        0x00, 0x1c, 0x20, 0x2c, //!< BG Pal1
+        0x00, 0x00, 0x10, 0x20, //!< BG Pal2
+        0x00, 0x06, 0x16, 0x26, //!< BG Pal3
 
-    pal_col(0, 0x02);
-    pal_col(1, 0x14);
-    pal_col(2, 0x20);
-    pal_col(3, 0x30);
+        0x00, 0x16, 0x35, 0x24, //!< SP Pal0
+        0x00, 0x00, 0x37, 0x25, //!< SP Pal1
+        0x00, 0x0d, 0x2d, 0x3a, //!< SP Pal2
+        0x00, 0x0d, 0x27, 0x2a, //!< SP Pal3
+    };
+    const uint8_t AttributeTable[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+        0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 
+        0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 
+        0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 
+        0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 
+    };
+    int16_t scrX, scrY;
+    uint8_t i;
+    uint8_t oam_id;
 
-    //!< 書き込み先の VRAM
-    //!< NTADR_A : ネームテーブルA (2, 2) のアドレス
-    vram_adr(NTADR_A(2, 2));
-    vram_write((const uint8_t*)Str, strlen(Str));
+    //pal_bg(BGPalette);
+    //pal_spr(SPRPalette);
+    pal_all(Palette);
+
+    //!< ネームテーブル
+    {
+        //!< PPUオフの時に行う
+        vram_adr(NAMETABLE_A);
+        vram_fill(0x16, 32 * 30);
+        //!< アトリビュートテーブル 
+        //vram_adr(NAMETABLE_A + 0x3c0); //!< 連続でやる場合はアドレスが進んでいるので必要ない (0x3c0 == 960 == 32 * 30)
+        vram_write(AttributeTable, sizeof(AttributeTable));
+
+        //!< 書き込み先の VRAM として NTADR_A(x, y)(==ネームテーブルA(x, y)) のアドレスを指定
+        put_str(NTADR_A(2, 2), "Hello World");
+
+        put_str(NTADR_A(2, 0), "A00");
+        put_str(NTADR_A(2, NT_TILE_HEIGHT >> 1), "A15");
+        put_str(NTADR_A(2, NT_TILE_HEIGHT - 1), "A29");
+
+        put_str(NTADR_C(2, 0), "C00");
+        put_str(NTADR_C(2, NT_TILE_HEIGHT >> 1), "C15");
+        put_str(NTADR_C(2, NT_TILE_HEIGHT - 1), "C29");
+    }
+    
+    oam_clear();
+#ifdef USE_SPLIT
+    //!< スプライト 0 と BG のピクセルが衝突した時に PPU_STATUS レジスタがセットされる、エッジを隠しているため x + 8 している
+    oam_spr(1 + 8, 30, 0xa0, OAM_BEHIND, 0);
+#endif
 
     //!< 描画をオンにする
-    ppu_on_all();
+    //ppu_on_all();
+    //ppu_on_bg();
+    //ppu_on_spr();
+    //!< モノクロ
+    //ppu_mask(MASK_BG | MASK_SPR | MASK_MONO);
+    //!< 淡色
+    //ppu_mask(MASK_BG | MASK_SPR | (MASK_TINT_RED | MASK_TINT_GREEN | MASK_TINT_BLUE));
+    //!< エッジを隠さない設定
+    //ppu_mask(MASK_BG | MASK_SPR | MASK_EDGE_BG | MASK_EDGE_SPR);
+    //!< 左側、上側のエッジを隠す設定にしておく
+    ppu_mask(MASK_BG | MASK_SPR);
 
-    while(1) {}
+    scrX = scrY = 0;
+    while(1) {
+        //!< パッド
+        {
+            const uint8_t pre0 = pad_state(0);
+            const uint8_t cur0 = pad_poll(0);
+        
+            if(cur0 & PAD_LEFT) { --scrX; }
+            if(cur0 & PAD_RIGHT) { ++scrX; }
+            //if((cur0 & PAD_LEFT) ^ (pre0 & PAD_LEFT)) { --scrX; }
+            //if((cur0 & PAD_RIGHT) ^ (pre0 & PAD_RIGHT)) { ++scrX; }
+            if(cur0 & PAD_UP) { --scrY; }
+            if(cur0 & PAD_DOWN) { ++scrY; }
+            while(scrX > NT_WIDTH2) { scrX -= NT_WIDTH2; }
+            while(scrX < 0) { scrX += NT_WIDTH2; }
+            while(scrY > NT_HEIGHT2) { scrY -= NT_HEIGHT2; }
+            while(scrY < 0) { scrY += NT_HEIGHT2; }
+        }
+
+        //!< スプライト
+        {
+            oam_id = 4;
+            for(i = 0;i < 1;++i) {
+                //!< OAM バッファにスプライトを書き込む
+                oam_id = oam_spr(NT_WIDTH >> 1, NT_HEIGHT >> 1, 16, 0, oam_id);
+            }
+            if(oam_id) {
+                oam_hide_rest(oam_id);
+            }
+        }
+
+#ifdef USE_SPLIT
+        //!< スプライト 0 コリジョンを待ってから、x スクロール値をセットする、y スクロール値は無視される
+        split(scrX, 0);
+#else
+        scroll(scrX, scrY);
+#endif
+        //!< PAL, NTSC を問わず、次のフレームまでウエイト
+        ppu_wait_nmi();      
+    }
 
     //!< 描画をオフにする
     ppu_off();
