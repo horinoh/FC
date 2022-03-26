@@ -44,7 +44,7 @@
 - コンフィグファイルに CHARS エントリを追加
     ~~~
     MEMORY {
-        CHR: 		start = $0000, size = $2000, file = %O, fill = yes;
+        CHR: start = $0000, size = $2000, file = %O, fill = yes;
     }
     SEGMENTS {   
         CHARS:    load = CHR,            type = rw;
@@ -57,6 +57,18 @@
     .byte $00,$00,$00,$00,$00,$00,$00,$00
     ...
     ~~~
+    - C から使えるようにする場合
+        ~~~
+        ; .s
+        .export _hoge
+        _hoge:
+            .byte $00,$00,$00,$00,$00,$00,$00,$00
+            ...
+        ~~~
+        ~~~
+        // .c
+        extern const byte hoge[];
+        ~~~
  - YYY.bin, YYY.s を用意し、アセンブル & リンクして使用
     ~~~
     ; YYY.s

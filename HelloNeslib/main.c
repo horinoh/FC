@@ -1,6 +1,10 @@
 #include "../nes.h"
+#include <ctype.h>
 
 //#define USE_SPLIT
+//#define USE_READVRAM
+//#define USE_FADE
+//#define USE_RLE
 
 void put_str(const uint16_t adr, const char* str) 
 {
@@ -21,6 +25,18 @@ void main()
         0x00, 0x0d, 0x2d, 0x3a, //!< SP Pal2
         0x00, 0x0d, 0x27, 0x2a, //!< SP Pal3
     };
+    #ifdef USE_RLE
+    #define RLE_TAG 0x1
+    const uint8_t NameTableRLE[] = { 
+        RLE_TAG, 
+        //!< データ, タグ, 個数,
+        0x16, RLE_TAG, 0xff, //!< 255
+        0x17, RLE_TAG, 0xff, //!< 510
+        0x18, RLE_TAG, 0xff, //!< 765
+        0x19, RLE_TAG, 0xc3, //!< 960 == 32 * 30
+        0x0,
+    };
+    #endif
     const uint8_t AttributeTable[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
         0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 
@@ -34,6 +50,7 @@ void main()
     int16_t scrX, scrY;
     uint8_t i;
     uint8_t oam_id;
+    uint8_t fade = 0;
 
     //pal_bg(BGPalette);
     //pal_spr(SPRPalette);
@@ -43,10 +60,18 @@ void main()
     {
         //!< PPUオフの時に行う
         vram_adr(NAMETABLE_A);
+#ifdef USE_RLE
+        //!< REL(Run Length Encoding) 解凍して読み込む場合
+        vram_unrle(NameTableRLE);
+        //!< LZ4 解凍して読み込む場合
+        //vram_unlz4();
+#else
         vram_fill(0x16, 32 * 30);
+#endif
         //!< アトリビュートテーブル 
         //vram_adr(NAMETABLE_A + 0x3c0); //!< 連続でやる場合はアドレスが進んでいるので必要ない (0x3c0 == 960 == 32 * 30)
         vram_write(AttributeTable, sizeof(AttributeTable));
+
 
         //!< 書き込み先の VRAM として NTADR_A(x, y)(==ネームテーブルA(x, y)) のアドレスを指定
         put_str(NTADR_A(2, 2), "Hello World");
@@ -110,6 +135,18 @@ void main()
             }
         }
 
+#ifdef USE_FADE
+        {
+            //!< フェード [0, 8] ... 0==黒, 4==通常色, 8==白
+            //!< BG, スプライト別のバージョンもある
+            //pal_bg_bright(); 
+            //pal_spr_bright();
+            pal_bright(++fade >> 5);
+        }
+#else
+        //pal_bright(4);
+#endif
+
 #ifdef USE_SPLIT
         //!< スプライト 0 コリジョンを待ってから、x スクロール値をセットする、y スクロール値は無視される
         split(scrX, 0);
@@ -117,7 +154,22 @@ void main()
         scroll(scrX, scrY);
 #endif
         //!< PAL, NTSC を問わず、次のフレームまでウエイト
-        ppu_wait_nmi();      
+        ppu_wait_nmi();
+
+#ifdef USE_READVRAM
+        {
+            uint8_t x = 2 + (rand8() & 15);
+            uint8_t read;
+            vram_adr(NTADR_A(x, 2));
+            vram_read(&read, sizeof(read));
+            //!< VRAM を読み込んでアルファベットだったら、大文字かどうか("U" or "L")を次の行に出力
+            if(isalpha(read)){
+                put_str(NTADR_A(x, 3), isupper(read) ? "U" : "L");
+            }
+            //!< VRAM アドレスは戻しておく必要がある
+            vram_adr(0x0);
+        }
+#endif
     }
 
     //!< 描画をオフにする

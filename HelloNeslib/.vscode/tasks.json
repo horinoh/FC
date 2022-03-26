@@ -26,7 +26,7 @@
         {
             "label": "Link with resource FC",
             "type": "shell",
-            "command": "cl65 -t nes -Oisr -C buildRes.cfg -o nes.rom ../neslib/crt0.o chr.o main.o nes.lib",
+            "command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom ../neslib/crt0.o chr.o main.o nes.lib",
         },
         {
             "label": "Execute FC",
