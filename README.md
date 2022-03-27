@@ -13,7 +13,10 @@
         $ld65 -o nes.rom --config build.cfg --obj *.o --lib nes.lib
         ~~~
 ### neslib を使用する場合
+<!--
  - [neslib](https://github.com/clbr/neslib) を git サブモジュールとして追加した
+ -->
+ - [neslib](https://github.com/sehugg/neslib.git) を git サブモジュールとして追加した
     - neslib/crt0.s をアセンブル & リンクして使用する
  - oam_off でエラーが出るので、ソースコードに以下の記述を追加
     ~~~

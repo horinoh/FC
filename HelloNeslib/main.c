@@ -2,14 +2,47 @@
 #include <ctype.h>
 
 //#define USE_SPLIT
+//#define USE_VRAMBUF
 //#define USE_READVRAM
-//#define USE_FADE
 //#define USE_RLE
+#define USE_FADE
+#define USE_OFF_SCROLL
 
 void put_str(const uint16_t adr, const char* str) 
 {
     vram_adr(adr);
     vram_write((const uint8_t*)str, strlen(str));
+}
+
+//!< オフスクリーンスクロール
+uint8_t ScrollNT[NT_TILE_HEIGHT];
+uint8_t ScrollAT[sizeof(ScrollNT) >> 2];
+#define NTADR_VERT(x, y) x < 32 ? NTADR_A(x, y) : NTADR_B(x & 31, y)
+#define NTADR_HORZ(x, y) y < 30 ? NTADR_A(x, y) : NTADR_B(x, y % 30)
+//!< 垂直ミラーリングでは
+//!< 0 ---- 32 ---- 63
+//!<    A        B
+
+void __fastcall__ irq_nmi_callback(void) 
+{
+  // check high bit of A to see if this is an IRQ
+  if (__A__ & 0x80) {
+    // it's an IRQ from the MMC3 mapper
+    // change PPU scroll registers
+   // PPU.scroll = counters[irqcount & 0x7f] >> 8;
+   // PPU.scroll = 0;
+    // advance to next scroll value
+    //++irqcount;
+    // acknowledge interrupt
+    MMC3_IRQ_DISABLE();
+    MMC3_IRQ_ENABLE();
+  } else {
+    // this is a NMI
+    // reload IRQ counter
+    MMC3_IRQ_RELOAD();
+    // reset scroll counter
+    //irqcount = 0;
+  }
 }
 
 void main()
@@ -47,10 +80,20 @@ void main()
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 
         0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 
     };
+
     int16_t scrX, scrY;
     uint8_t i;
     uint8_t oam_id;
     uint8_t fade = 0;
+
+    //!< 割り込み
+    {
+        MMC3_IRQ_SET_VALUE(7);
+        MMC3_IRQ_RELOAD();
+        MMC3_IRQ_ENABLE();
+        ENABLE_CPU_IRQ;
+        nmi_set_callback(irq_nmi_callback);
+    }
 
     //pal_bg(BGPalette);
     //pal_spr(SPRPalette);
@@ -104,6 +147,24 @@ void main()
     //!< 左側、上側のエッジを隠す設定にしておく
     ppu_mask(MASK_BG | MASK_SPR);
 
+    {
+        VRAMBUF_CLEAR;
+        //!< VRAM バッファのアドレスを知らせておく
+        set_vram_update(VramBuffer);
+#ifdef USE_VRAMBUF
+        vrambuf_put_h(NTADR_A(2, 16), "1234567890");
+        vrambuf_put_h(NTADR_A(2, 17), "ABCDEFGHIJ");
+
+        vrambuf_put_v(NTADR_A(16, 2), "1234567890");
+        vrambuf_put_v(NTADR_A(17, 2), "ABCDEFGHIJ");
+#endif
+    }
+
+#ifdef USE_FADE
+    //!< フェード (黒から開始)
+    pal_bright(0);
+#endif
+
     scrX = scrY = 0;
     while(1) {
         //!< パッド
@@ -123,12 +184,18 @@ void main()
             while(scrY < 0) { scrY += NT_HEIGHT2; }
         }
 
+#ifdef USE_OFF_SCROLL
+        //vrambuf_put_v(NTADR_VERT(scrX, scrY), ScrollNT, sizeof(ScrollNT));
+#endif
+
         //!< スプライト
         {
             oam_id = 4;
-            for(i = 0;i < 1;++i) {
+            for(i = 0;i < 32;++i) {
+                uint8_t x = (i << 3); // + (NT_WIDTH >> 1);
+                uint8_t y = (i << 3); // + (NT_HEIGHT >> 1);
                 //!< OAM バッファにスプライトを書き込む
-                oam_id = oam_spr(NT_WIDTH >> 1, NT_HEIGHT >> 1, 16, 0, oam_id);
+                oam_id = oam_spr(x, y, 16 + i, 0, oam_id);
             }
             if(oam_id) {
                 oam_hide_rest(oam_id);
@@ -136,15 +203,16 @@ void main()
         }
 
 #ifdef USE_FADE
+        //!< フェード [0, 8] ... 0==黒, 4==通常色, 8==白
         {
-            //!< フェード [0, 8] ... 0==黒, 4==通常色, 8==白
-            //!< BG, スプライト別のバージョンもある
-            //pal_bg_bright(); 
-            //pal_spr_bright();
-            pal_bright(++fade >> 5);
+            fade = MIN(++fade, 64);
+            pal_bright(fade >> 4);
+            //pal_bg_bright(), pal_spr_bright();
         }
-#else
-        //pal_bright(4);
+#endif
+
+#ifdef USE_VRAMBUF
+        vrambuf_put(NTADR_A(2, 28), "abcdefghijklmnopqrstuvwxyz", NT_UPD_HORZ);
 #endif
 
 #ifdef USE_SPLIT

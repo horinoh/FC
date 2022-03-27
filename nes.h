@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <string.h>
+#include <peekpoke.h>
 
 #include "../neslib/neslib.h"
 
@@ -10,10 +11,54 @@ uint8_t oam_off;
 #pragma data-name(pop)
 #pragma bss-name (pop)
 
+//!< PPU マスク
 #define MASK_TINT_RED		0x20
 #define MASK_TINT_BLUE		0x40
 #define MASK_TINT_GREEN		0x80
 #define MASK_MONO		0x01
+
+//!< VRAM バッファ
+//!< スタック [0x100, 0x1ff] の内 [0x100, 0x17f](128byte) を VRAM バッファとして使用することにする
+#define VramBuffer ((uint8_t *)0x100)
+uint8_t VramIndex = 0;
+//!< NMI の間に扱えるのは精々 140 byte くらいなので 128 byte としておく
+//!< 他に色々やっていると 128 byte もフルには使えない？
+uint8_t VramBufferSize = 64; //128;
+//!< VRAM バッファのフォーマット
+//!< アドレス上位 | (NT_UPD_HORZ or NT_UPD_VERT), 
+//!< アドレス下位, 
+//!< 長さ, 
+//!< ..., 
+//!< NT_UPD_EOF
+#define VRAMBUF_SIZE(size) VramBufferSize = size
+#define VRAMBUF_DATA(data) VramBuffer[VramIndex++] = data
+#define VRAMBUF_DATA_LEN(data, len) memcpy(&VramBuffer[VramIndex], data, len); VramIndex += len
+#define VRAMBUF_END VramBuffer[VramIndex] = NT_UPD_EOF;
+#define VRAMBUF_HEADER(adr, len, flags) VRAMBUF_DATA((adr >> 8) | flags); VRAMBUF_DATA(adr); VRAMBUF_DATA(len)
+#define VRAMBUF_CLEAR VramIndex = 0; VRAMBUF_END
+#define VRAMBUF_FLUSH VRAMBUF_END; ppu_wait_frame(); VRAMBUF_CLEAR
+void vrambuf_put(const uint16_t adr, register const char* str, const uint8_t flags)
+{
+    const uint8_t len = strlen(str);
+    if(VramBufferSize < VramIndex + len + 4) {
+        VRAMBUF_FLUSH;
+    }
+    VRAMBUF_HEADER(adr, len, flags);
+    VRAMBUF_DATA_LEN(str, len);
+    VRAMBUF_END;
+}
+void vrambuf_put_h(const uint16_t adr, register const char* str) { vrambuf_put(adr, str, NT_UPD_HORZ); }
+void vrambuf_put_v(const uint16_t adr, register const char* str) { vrambuf_put(adr, str, NT_UPD_VERT); }
+
+//!< IRQ
+#define STROBE(adr) __asm__ ("sta %w", adr)
+#define MMC3_IRQ_SET_VALUE(n) POKE(0xc000, (n));
+#define MMC3_IRQ_RELOAD()     STROBE(0xc001)
+#define MMC3_IRQ_DISABLE()    STROBE(0xe000)
+#define MMC3_IRQ_ENABLE()     STROBE(0xe001)
+
+//!< 6502 の割り込みフラグをクリア、これにより IQR が有効になる
+#define ENABLE_CPU_IRQ __asm__ ("cli")
 
 /*
 CPU

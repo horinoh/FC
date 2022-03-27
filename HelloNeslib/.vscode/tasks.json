@@ -50,6 +50,7 @@
             "dependsOrder": "sequence",
             "dependsOn": [
                 //"Conert",
+                "Assemble neslib",
                 "Assemble Resource",
                 "Compile FC",
                 "Link with resource FC",
