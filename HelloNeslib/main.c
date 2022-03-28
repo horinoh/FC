@@ -6,7 +6,7 @@
 //#define USE_READVRAM
 //#define USE_RLE
 #define USE_FADE
-#define USE_OFF_SCROLL
+//#define USE_OFF_SCROLL
 
 void put_str(const uint16_t adr, const char* str) 
 {
@@ -25,23 +25,12 @@ uint8_t ScrollAT[sizeof(ScrollNT) >> 2];
 
 void __fastcall__ irq_nmi_callback(void) 
 {
-  // check high bit of A to see if this is an IRQ
-  if (__A__ & 0x80) {
-    // it's an IRQ from the MMC3 mapper
-    // change PPU scroll registers
-   // PPU.scroll = counters[irqcount & 0x7f] >> 8;
-   // PPU.scroll = 0;
-    // advance to next scroll value
-    //++irqcount;
-    // acknowledge interrupt
-    MMC3_IRQ_DISABLE();
-    MMC3_IRQ_ENABLE();
+  if (IS_IRQ) {
+    //!< IRQ
+    MMC3_IRQ_RESET();
   } else {
-    // this is a NMI
-    // reload IRQ counter
+    //!< NMI
     MMC3_IRQ_RELOAD();
-    // reset scroll counter
-    //irqcount = 0;
   }
 }
 
@@ -86,18 +75,12 @@ void main()
     uint8_t oam_id;
     uint8_t fade = 0;
 
-    //!< 割り込み
+    //!< パレット
     {
-        MMC3_IRQ_SET_VALUE(7);
-        MMC3_IRQ_RELOAD();
-        MMC3_IRQ_ENABLE();
-        ENABLE_CPU_IRQ;
-        nmi_set_callback(irq_nmi_callback);
+        //pal_bg(BGPalette);
+        //pal_spr(SPRPalette);
+        pal_all(Palette);
     }
-
-    //pal_bg(BGPalette);
-    //pal_spr(SPRPalette);
-    pal_all(Palette);
 
     //!< ネームテーブル
     {
@@ -165,6 +148,21 @@ void main()
     pal_bright(0);
 #endif
 
+    //!< 割り込み
+#if false
+    {
+        set_ppu_ctrl_var(get_ppu_ctrl_var() | 0x08);
+        POKE(0xA001, 0x80);
+        POKE(0xA000, 0x01);
+
+        MMC3_IRQ_SET_VALUE(7);
+        MMC3_IRQ_RELOAD();
+        MMC3_IRQ_ENABLE();
+        ENABLE_CPU_IRQ;
+        nmi_set_callback(irq_nmi_callback);
+    }
+#endif
+
     scrX = scrY = 0;
     while(1) {
         //!< パッド
@@ -185,15 +183,15 @@ void main()
         }
 
 #ifdef USE_OFF_SCROLL
-        //vrambuf_put_v(NTADR_VERT(scrX, scrY), ScrollNT, sizeof(ScrollNT));
+        vrambuf_put_v(NTADR_VERT(scrX, scrY), ScrollNT, sizeof(ScrollNT));
 #endif
 
         //!< スプライト
         {
             oam_id = 4;
-            for(i = 0;i < 32;++i) {
-                uint8_t x = (i << 3); // + (NT_WIDTH >> 1);
-                uint8_t y = (i << 3); // + (NT_HEIGHT >> 1);
+            for(i = 0;i < 8;++i) {
+                uint8_t x = (i << 3) + (NT_WIDTH >> 1);
+                uint8_t y = (i << 3) + (NT_HEIGHT >> 1);
                 //!< OAM バッファにスプライトを書き込む
                 oam_id = oam_spr(x, y, 16 + i, 0, oam_id);
             }

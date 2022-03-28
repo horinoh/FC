@@ -13,11 +13,22 @@
         $ld65 -o nes.rom --config build.cfg --obj *.o --lib nes.lib
         ~~~
 ### neslib を使用する場合
-<!--
  - [neslib](https://github.com/clbr/neslib) を git サブモジュールとして追加した
- -->
- - [neslib](https://github.com/sehugg/neslib.git) を git サブモジュールとして追加した
     - neslib/crt0.s をアセンブル & リンクして使用する
+ - [neslib2](https://github.com/sehugg/neslib.git) を git サブモジュールとして追加した
+    - 以下のような Makefile.bat を作成した
+        ~~~
+        REM Clean
+        @del *.o neslib2.lib
+
+        REM Build
+        @for %%i in (*.s) do (cl65 --verbose -t nes -Oisr -g -c %%i)
+
+        REM Link
+        REM @ar65 a neslib2.lib lz4vram.o pad.o rand.o memfill.o vram_read.o vram_unrle.o oam_meta_spr_clip.o oam_meta_spr_pal.o
+        ~~~
+     - neslib2/*.o をリンクして使用する
+    
  - oam_off でエラーが出るので、ソースコードに以下の記述を追加
     ~~~
     #include <stdint.h>

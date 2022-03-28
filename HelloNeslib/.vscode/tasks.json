@@ -4,9 +4,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Assemble neslib",
+            "label": "Build neslib",
             "type": "shell",
-            "command": "cl65 -t nes -Oisr -c ../neslib/crt0.s",
+            "command": "cl65 -t nes -Oisr -c ../neslib/crt0.s ; ar65 a ../neslib/neslib.lib ../neslib/crt0.o",
+        },
+        {
+            "label": "Build neslib2",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -c ../neslib2/crt0.s ../neslib2/lz4vram.s ../neslib2/memfill.s ../neslib2/oam_clear_fast.s ../neslib2/oam_meta_spr.s ../neslib2/oam_meta_spr_clip.s ../neslib2/oam_meta_spr_pal.s ../neslib2/oam_spr.s ../neslib2/pad.s ../neslib2/rand.s ../neslib2/split.s ../neslib2/splitxy.s ../neslib2/vram_read.s ../neslib2/vram_unrle.s",
         },
         {
             "label": "Assemble Resource",
@@ -21,13 +26,19 @@
         {
             "label": "Link FC",
             "type": "shell",
-            "command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom ../neslib/crt0.o main.o nes.lib"
+            // NESLIB
+            //"command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom main.o ../neslib/crt0.o",
+            // NESLIB2
+            "command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom main.o ../neslib2/crt0.o ../neslib2/lz4vram.o ../neslib2/memfill.o ../neslib2/oam_clear_fast.o ../neslib2/oam_meta_spr.o ../neslib2/oam_meta_spr_clip.o ../neslib2/oam_meta_spr_pal.o ../neslib2/oam_spr.o ../neslib2/pad.o ../neslib2/rand.o ../neslib2/split.o ../neslib2/splitxy.o ../neslib2/vram_read.o ../neslib2/vram_unrle.o",
         },
         {
             "label": "Link with resource FC",
             "type": "shell",
-            "command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom ../neslib/crt0.o chr.o main.o nes.lib",
-        },
+            // NESLIB
+            //"command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom chr.o main.o ../neslib/crt0.o",
+            // NESLIB2
+            "command": "cl65 -t nes -Oisr -C build.cfg -o nes.rom chr.o main.o ../neslib2/crt0.o ../neslib2/lz4vram.o ../neslib2/memfill.o ../neslib2/oam_clear_fast.o ../neslib2/oam_meta_spr.o ../neslib2/oam_meta_spr_clip.o ../neslib2/oam_meta_spr_pal.o ../neslib2/oam_spr.o ../neslib2/pad.o ../neslib2/rand.o ../neslib2/split.o ../neslib2/splitxy.o ../neslib2/vram_read.o ../neslib2/vram_unrle.o",
+        }
         {
             "label": "Execute FC",
             "type": "shell",
@@ -38,7 +49,7 @@
             "type": "shell",
             "dependsOrder": "sequence",
             "dependsOn": [
-                "Assemble neslib",
+                "Build neslib",
                 "Compile FC",
                 "Link FC",
                 "Execute FC"
@@ -50,7 +61,7 @@
             "dependsOrder": "sequence",
             "dependsOn": [
                 //"Conert",
-                "Assemble neslib",
+                "Build neslib2",
                 "Assemble Resource",
                 "Compile FC",
                 "Link with resource FC",

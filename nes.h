@@ -2,14 +2,20 @@
 #include <string.h>
 #include <peekpoke.h>
 
-#include "../neslib/neslib.h"
+#define USE_NESLIB2
 
+#ifdef USE_NESLIB2
+#include "../neslib2/neslib.h"
+#else
+#include "../neslib/neslib.h"
 //!< oam_off
 #pragma bss-name (push,"ZEROPAGE")
 #pragma data-name (push,"ZEROPAGE")
 uint8_t oam_off;
 #pragma data-name(pop)
 #pragma bss-name (pop)
+#endif
+
 
 //!< PPU マスク
 #define MASK_TINT_RED		0x20
@@ -50,15 +56,20 @@ void vrambuf_put(const uint16_t adr, register const char* str, const uint8_t fla
 void vrambuf_put_h(const uint16_t adr, register const char* str) { vrambuf_put(adr, str, NT_UPD_HORZ); }
 void vrambuf_put_v(const uint16_t adr, register const char* str) { vrambuf_put(adr, str, NT_UPD_VERT); }
 
-//!< IRQ
+//!< MMC(Memory Management Controller)
+//!< スキャンラインをカウントして、指定のカウントで IQR を発行可能
+//!< レジスタA の値を任意のアドレスへ
 #define STROBE(adr) __asm__ ("sta %w", adr)
-#define MMC3_IRQ_SET_VALUE(n) POKE(0xc000, (n));
-#define MMC3_IRQ_RELOAD()     STROBE(0xc001)
-#define MMC3_IRQ_DISABLE()    STROBE(0xe000)
-#define MMC3_IRQ_ENABLE()     STROBE(0xe001)
+#define MMC3_IRQ_SET_VALUE(n)   POKE(0xc000, (n));
+#define MMC3_IRQ_RELOAD()       STROBE(0xc001)
+#define MMC3_IRQ_DISABLE()      STROBE(0xe000)
+#define MMC3_IRQ_ENABLE()       STROBE(0xe001)
+#define MMC3_IRQ_RESET()        MMC3_IRQ_DISABLE();MMC3_IRQ_ENABLE()
 
 //!< 6502 の割り込みフラグをクリア、これにより IQR が有効になる
 #define ENABLE_CPU_IRQ __asm__ ("cli")
+
+#define IS_IRQ (__A__ & 0x80)
 
 /*
 CPU
