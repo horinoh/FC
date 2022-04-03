@@ -8,6 +8,15 @@
 #define USE_FADE
 //#define USE_OFF_SCROLL
 
+#define USE_MMC3
+//#define USE_BANK_SWITCH
+
+#if defined(USE_MMC3) && defined(USE_BANK_SWITCH)
+#pragma rodata-name("CODE3")
+const char TEXT3[] = { "Hello Bank3 @ 0x8000" };
+#pragma code-name("CODE") // 元に戻す
+#endif
+
 void put_str(const uint16_t adr, const char* str) 
 {
     vram_adr(adr);
@@ -101,7 +110,7 @@ void main()
 
         //!< 書き込み先の VRAM として NTADR_A(x, y)(==ネームテーブルA(x, y)) のアドレスを指定
         put_str(NTADR_A(2, 2), "Hello World");
-
+        
         put_str(NTADR_A(2, 0), "A00");
         put_str(NTADR_A(2, NT_TILE_HEIGHT >> 1), "A15");
         put_str(NTADR_A(2, NT_TILE_HEIGHT - 1), "A29");
@@ -148,9 +157,10 @@ void main()
     pal_bright(0);
 #endif
 
-    //!< 割り込み
-#if false
+#ifdef USE_MMC3
+    //!< MMC3
     {
+        //!< 割り込み
         set_ppu_ctrl_var(get_ppu_ctrl_var() | 0x08);
         POKE(0xA001, 0x80);
         POKE(0xA000, 0x01);
@@ -160,6 +170,15 @@ void main()
         MMC3_IRQ_ENABLE();
         ENABLE_CPU_IRQ;
         nmi_set_callback(irq_nmi_callback);
+
+        //!< (プログラムから)ミラーリングの変更
+        MMC3_MIRROR_VERT;
+
+#ifdef USE_BANK_SWITCH
+        //!< バンク3 を選択してからコール -> TEXT3 を使用
+        MMC3_PRG_SELECT_BANK3;
+        put_str(NTADR_A(2, 2), TEXT3);
+#endif
     }
 #endif
 
