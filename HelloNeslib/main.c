@@ -17,12 +17,6 @@ const char TEXT3[] = { "Hello Bank3 @ 0x8000" };
 #pragma code-name("CODE") // 元に戻す
 #endif
 
-void put_str(const uint16_t adr, const char* str) 
-{
-    vram_adr(adr);
-    vram_write((const uint8_t*)str, strlen(str));
-}
-
 //!< オフスクリーンスクロール
 uint8_t ScrollNT[NT_TILE_HEIGHT];
 uint8_t ScrollAT[sizeof(ScrollNT) >> 2];
