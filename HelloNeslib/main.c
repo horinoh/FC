@@ -20,8 +20,6 @@ const char TEXT3[] = { "Hello Bank3 @ 0x8000" };
 //!< オフスクリーンスクロール
 uint8_t ScrollNT[NT_TILE_HEIGHT];
 uint8_t ScrollAT[sizeof(ScrollNT) >> 2];
-#define NTADR_VERT(x, y) x < 32 ? NTADR_A(x, y) : NTADR_B(x & 31, y)
-#define NTADR_HORZ(x, y) y < 30 ? NTADR_A(x, y) : NTADR_B(x, y % 30)
 //!< 垂直ミラーリングでは
 //!< 0 ---- 32 ---- 63
 //!<    A        B

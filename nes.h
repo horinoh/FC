@@ -136,6 +136,19 @@ OAMバッファ     256 byte
 ppu_mask(MASK_BG | MASK_SPR | MASK_EDGE_BG | MASK_EDGE_SPR);
 */
 
+/*
+パフォーマンス
+__fastcall__ がついているアセンブラで書かれた関数は、スタックではなく A, X レジスタを使用するため高速
+スタック(ローカル変数、引数)は、グローバル変数より 5倍遅い
+i++ よりも ++i を使う
+*(p + 1) よりも p[1] を使う
+*/
+
+/*
+インラインアセンブラ
+asm("...");
+*/
+
 #define COUNTOF(x) sizeof(x) / sizeof(x[0])
 
 #define NT_TILE_WIDTH 32
@@ -144,3 +157,11 @@ ppu_mask(MASK_BG | MASK_SPR | MASK_EDGE_BG | MASK_EDGE_SPR);
 #define NT_HEIGHT (NT_TILE_HEIGHT << 3)
 #define NT_WIDTH2 (NT_WIDTH << 1)
 #define NT_HEIGHT2 (NT_HEIGHT << 1)
+
+#define NTADR_VERT(x, y) x < 32 ? NTADR_A(x, y) : NTADR_B(x & 31, y)
+#define NTADR_HORZ(x, y) y < 30 ? NTADR_A(x, y) : NTADR_B(x, y % 30)
+
+#define OAM_SIZE_8x8 0
+#define OAM_SIZE_8x16 0
+
+#define OAM_END_OF_META_SPR 128

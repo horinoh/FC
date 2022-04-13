@@ -57,15 +57,20 @@
         ~~~
         ~~~
         // .c
-        extern const byte hoge[];
+        extern const uint8_t hoge[];
         ~~~
  - YYY.bin, YYY.s を用意し、アセンブル & リンクして使用
     ~~~
     ; YYY.s
     .segment "CHARS"
-	.incbin "YYY.bin"
+    .export _YYY
+    _YYY:
+    .incbin "YYY.bin"
     ~~~
-
+    ~~~
+    // .c
+    extern const uint8_t YYY[];
+    ~~~
 ## 実行
 - [エミュレータ(nestopia)](http://nestopia.sourceforge.net/)
     - C:\Nestopia140bin を環境変数 Path に通しておく

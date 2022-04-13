@@ -1,5 +1,7 @@
 #include "../nes.h"
 
+extern const uint8_t chr[];
+
 void main() 
 {
   const uint8_t Palette[] = {
@@ -13,8 +15,7 @@ void main()
         0x00, 0x0d, 0x2d, 0x3a, //!< SP Pal2
         0x00, 0x0d, 0x27, 0x2a, //!< SP Pal3
   };
-  const char* str = "HELLO WORLD";
-  uint8_t fade = 0;
+  uint8_t Fade = 0;
 
   //!< パレット
   {
@@ -23,11 +24,9 @@ void main()
     pal_all((const char*)Palette);
   }
 
-  //!< HELLO WORLD
-  vram_adr(NTADR_A(2,2));
-  vram_write((const unsigned char*)str, strlen(str));
+  put_str(NTADR_A(2,2), "HELLO WORLD");
 
-  pal_bright(fade >> 4);
+  pal_bright(Fade >> 4);
 
   //!< PPU 制御
   {
@@ -51,10 +50,10 @@ void main()
     //!< pal_bright(4) == 通常色
     //!< pal_bright(8) == ホワイトアウト
     {
-      fade = MIN(++fade, 64);
-      pal_bright(fade >> 4);
-      //pal_bg_bright(fade >> 4)
-      //pal_spr_bright(fade >> 4);
+      Fade = MIN(++Fade, 64);
+      pal_bright(Fade >> 4);
+      //pal_bg_bright(Fade >> 4)
+      //pal_spr_bright(Fade >> 4);
     }
 
     //!< PAL, NTSC を問わず、次のフレームまでウエイト
