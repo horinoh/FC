@@ -1,6 +1,6 @@
 #include "../nes.h"
 
-//#define USE_READ_VRAM
+#define USE_READ_VRAM
 
 void main() 
 {
@@ -30,7 +30,10 @@ void main()
   }
 
 #ifdef USE_READ_VRAM
-  put_str(NTADR_A(2, 2), "AAAAAAAAAAA");
+  put_str(NTADR_A(2, 2), "RGBRGBRGBRGBRGB");
+  put_str(NTADR_A(2, 3), "RRRRRRRRRRRRRRR");
+  put_str(NTADR_A(2, 4), "GGGGGGGGGGGGGGG");
+  put_str(NTADR_A(2, 5), "BBBBBBBBBBBBBBB");
 #endif
 
   pal_bright(Fade >> 4);
@@ -85,8 +88,14 @@ void main()
       vram_adr(NTADR_A(X >> 3, Y >> 3));
       vram_read(&read, sizeof(read));
       //!< VRAM を読み込んでアルファベット('A')だったら背景色を変更する
-      if(isalpha(read)) {
-        pal_col(0, 0x14);
+      if(read == 'R') {
+        pal_col(0, 0x16);
+      } else if(read == 'G') {
+        pal_col(0, 0x1a);
+      } else if(read == 'B') {
+        pal_col(0, 0x12);
+      } else {
+        pal_col(0, 0x03);
       }
       //!< VRAM アドレスは戻しておく必要がある
       vram_adr(0x0);

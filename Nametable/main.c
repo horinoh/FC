@@ -1,7 +1,7 @@
 #include "../nes.h"
 
-//#define USE_SPLIT
-#define USE_VRAM_BUFFER
+#define USE_SPLIT
+//#define USE_VRAM_BUFFER
 
 void main() 
 {

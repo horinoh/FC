@@ -11,7 +11,7 @@
         {
             "label": "Link",
             "type": "shell",
-            "command": "cl65 -C ../config/nrom.cfg -o nes.rom ../neslib2/crt0.o ../neslib2/pad.o ../neslib2/oam_spr.o ../neslib2/split.o ../neslib2/neslib2.lib main.o ../resource/chr.o"
+            "command": "ld65 -o nes.rom --config ../config/nrom.cfg -L C:/cc65-snapshot-win32/lib -L ../neslib2 --obj main.o ../resource/chr.o --lib neslib2.lib nes.lib"
         },
         {
             "label": "Execute",
