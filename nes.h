@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 #include <peekpoke.h>
 
 #include "mmc3.h"
@@ -36,9 +38,9 @@ void put_str(const uint16_t adr, const char* str)
 //!< スタック [0x100, 0x1ff] の内 [0x100, 0x17f](128byte) を VRAM バッファとして使用することにする
 #define VramBuffer ((uint8_t *)0x100)
 uint8_t VramIndex = 0;
-//!< NMI の間に扱えるのは精々 140 byte くらいなので 128 byte としておく
-//!< 他に色々やっていると 128 byte もフルには使えない？
-uint8_t VramBufferSize = 64; //128;
+//!< NMI の間に扱えるのは精々 140 byte くらいなので ここでは 128 byte としておく
+//!< 他に色々やっていると 128 byte もフルには使えないので調整して使う
+uint8_t VramBufferSize = 128;
 //!< VRAM バッファのフォーマット
 //!< アドレス上位 | (NT_UPD_HORZ or NT_UPD_VERT), 
 //!< アドレス下位, 
@@ -160,6 +162,12 @@ asm("...");
 
 #define NTADR_VERT(x, y) x < 32 ? NTADR_A(x, y) : NTADR_B(x & 31, y)
 #define NTADR_HORZ(x, y) y < 30 ? NTADR_A(x, y) : NTADR_B(x, y % 30)
+
+#define ATTR_LT(x) (x)
+#define ATTR_RT(x) ((x) << 2)
+#define ATTR_LB(x) ((x) << 4)
+#define ATTR_RB(x) ((x) << 6)
+#define ATTR(lt, rt, lb, rb) ATTR_LT(lt) | ATTR_RT(rt) | ATTR_LB(lb) | ATTR_RB(rb)
 
 #define OAM_SIZE_8x8 0
 #define OAM_SIZE_8x16 0
