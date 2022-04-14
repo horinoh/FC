@@ -1,7 +1,5 @@
 #include "../nes.h"
 
-extern const uint8_t chr[];
-
 void main() 
 {
   const uint8_t Palette[] = {

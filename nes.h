@@ -1,3 +1,6 @@
+#ifndef _NES_H_
+#define _NES_H_
+
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
@@ -5,6 +8,7 @@
 #include <peekpoke.h>
 
 #include "mmc3.h"
+#include "apu.h"
 
 #define USE_NESLIB2
 
@@ -173,3 +177,5 @@ asm("...");
 #define OAM_SIZE_8x16 0
 
 #define OAM_END_OF_META_SPR 128
+
+#endif //!< _NES_H_

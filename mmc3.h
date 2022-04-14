@@ -1,3 +1,6 @@
+#ifndef _MMC3_H_
+#define _MMC3_H_
+
 //!< MMC(Memory Management Controller) ... コンフィグファイルでMMC3を有効にしておく必要がある
 //!< スキャンラインをカウントして、指定のカウントで IQR を発行可能
 //!< レジスタA の値を任意のアドレスへ
@@ -86,3 +89,4 @@ MMC3_PRG_SELECT_BANK1; //!< 関数用にバンク1を選択
 MMC3_PRG_SELECT_BANK5; //!< 引数のテキスト用にバンク5を選択
 draw_text(NTADR_A(2, 3), TEXT5)
 */
+#endif //!< _MMC3_H_
