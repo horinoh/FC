@@ -18,9 +18,9 @@ typedef struct PULSE_PARAM
 {
   uint8_t channel;  //!< [PULS_CH0, PULS_CH1]
 
-  int16_t period;  //!< [0, 2047]
-  int16_t duty;     //!< [DUTY_12, DUTY_25, DUTY_50, DUTY_75]
-  int8_t decay;    //!< [0, 15]
+  int16_t period;  //!< [0, 2047] 1/period
+  int16_t duty;    //!< [DUTY_12, DUTY_25, DUTY_50, DUTY_75]
+  int8_t decay;    //!< [0, 15] 0:fast, 15:slow
   int8_t length;   //!< [0, 31]
   int8_t volume;   //!< [0, 15]
 } PULSE_PARAM;
@@ -28,8 +28,8 @@ typedef struct PULSE_SWEEP_PARAM
 {
   uint8_t channel;  //!< [PULS_CH0, PULS_CH1]
   
-  uint8_t period;   //!< [0, 7]
-  uint8_t shit;     //!< [0, 7]
+  uint8_t period;   //!< [0, 7] 0:smooth, 7:glitchy
+  uint8_t shift;    //!< [0, 7] 0:fast, 7:slow
   uint8_t up;       //!< [0, 1]
 } PULSE_SWEEP_PARAM;
 
@@ -215,10 +215,10 @@ void main()
         switch (SoundKind) {
         case SND_PULSE0:
           if(Cur & PAD_SELECT) {
-            //!< 鳴り続ける
+            //!< 再生(鳴り続ける)
             APU_PULSE_SUSTAIN(PulseParam[0].channel, PulseParam[0].period, PulseParam[0].duty, PulseParam[0].volume);
           } else {
-            //!< 減衰していく
+            //!< 再生(減衰していく)
             APU_PULSE_DECAY(PulseParam[0].channel, PulseParam[0].period, PulseParam[0].duty, PulseParam[0].decay, PulseParam[0].length);
           }
            //APU_PULSE_SET_DECAY(PulseParam[0].channel, PulseParam[0].duty, PulseParam[0].decay);
@@ -249,15 +249,15 @@ void main()
           break;    
         }
       }
-      //!< スイープ (矩形波)
+      //!< スイープ (ピッチを上げたり下げたりする、矩形波のみ)
       if(TRG(PAD_B)) {
         switch (SoundKind) {
         case SND_PULSE0:
-          APU_PULSE_SWEEP(PulseSweepParam[0].channel, PulseSweepParam[0].period, PulseSweepParam[0].shit, PulseSweepParam[0].up);
+          APU_PULSE_SWEEP(PulseSweepParam[0].channel, PulseSweepParam[0].period, PulseSweepParam[0].shift, PulseSweepParam[0].up);
           //APU_PULSE_SWEEP_DISABLE(PulseParam[0].channel);
           break;    
         case SND_PULSE1:
-          APU_PULSE_SWEEP(PulseSweepParam[1].channel, PulseSweepParam[1].period, PulseSweepParam[1].shit, PulseSweepParam[1].up);
+          APU_PULSE_SWEEP(PulseSweepParam[1].channel, PulseSweepParam[1].period, PulseSweepParam[1].shift, PulseSweepParam[1].up);
           //APU_PULSE_SWEEP_DISABLE(PulseParam[1].channel);
           break;    
         }
@@ -291,7 +291,7 @@ void main()
           sprintf(Str, "%04d", PulseParam[SoundKind].decay);
           break;
         case 3:          
-          sprintf(Str, "%04d", APULengthTable[PulseParam[SoundKind].length]);
+          sprintf(Str, "%04d", (PulseParam[SoundKind].length & 1) ? APULengthTableOdd[PulseParam[SoundKind].length >> 1] : APULengthTableEven[PulseParam[SoundKind].length >> 1]);
           break;
         case 4:          
           sprintf(Str, "%04d", PulseParam[SoundKind].volume);
@@ -310,8 +310,8 @@ void main()
         case 0:
           sprintf(Str, "%04d", TriangleParam.period);
           break;
-        case 1:          
-          sprintf(Str, "%04d", APULengthTable[TriangleParam.length]);
+        case 1: 
+          sprintf(Str, "%04d", (TriangleParam.length & 1) ? APULengthTableOdd[TriangleParam.length >> 1] : APULengthTableEven[TriangleParam.length >> 1]);         
           break;
         }
         vrambuf_put_h(NTADR_A(10, 4 + i), Str);
@@ -328,7 +328,7 @@ void main()
           sprintf(Str, "%04d", NoiseParam.decay);
           break;
         case 2:
-          sprintf(Str, "%04d", APULengthTable[NoiseParam.length]);
+          sprintf(Str, "%04d", (NoiseParam.length & 1) ? APULengthTableOdd[NoiseParam.length >> 1] : APULengthTableEven[NoiseParam.length >> 1]);         
           break;
         case 3:          
           sprintf(Str, "%04d", NoiseParam.volume);

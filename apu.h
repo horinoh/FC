@@ -76,9 +76,6 @@ len     [0, 15]
     APU.noise.period = (_period);\
     APU.noise.len = (_len)
 
-const uint8_t APULengthTable[] = {
-  10, 254, 20, 2, 40, 4, 80, 6, 160, 8, 60, 10, 14, 12, 26, 14, 12, 16, 24, 18, 48, 20, 96, 22, 192, 24, 72, 26, 16, 28, 32, 30,  
-};
 const uint8_t APULengthTableEven[] = {
   //!< Faster Music
   //!< 1/16, 1/8, 1/4, 1/2, 1, 3/8, 1/12, 1/6
@@ -87,7 +84,7 @@ const uint8_t APULengthTableEven[] = {
   12, 24, 48, 96, 192, 72, 16, 32, 
 };
 const uint8_t APULengthTableOdd[] = {
-  //!< Lnear values
+  //!< Linear values
   254, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
 };
 #endif //!< _APU_H_
