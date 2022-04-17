@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <peekpoke.h>
+#include <nes.h>
 
 #include "mmc3.h"
 #include "apu.h"

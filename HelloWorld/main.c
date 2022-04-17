@@ -1,4 +1,4 @@
-#include "../nes.h"
+#include "../fc.h"
 
 void main() 
 {

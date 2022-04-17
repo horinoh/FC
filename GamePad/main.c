@@ -1,4 +1,4 @@
-#include "../nes.h"
+#include "../fc.h"
 
 void main() 
 {
@@ -43,6 +43,8 @@ void main()
       const uint8_t Cur = pad_poll(0);
       const uint8_t Chg = Pre ^ Cur;
 
+#define TRG(x) (Chg & (x)) & (Cur & (x));
+#define REL(x) (Chg & (x)) & (Pre & (x));
       if(Cur & PAD_A) {}
       if(Cur & PAD_B) {}
       if(Cur & PAD_SELECT) {}
@@ -51,6 +53,8 @@ void main()
       if(Cur & PAD_DOWN) {}
       if(Cur & PAD_LEFT) {}
       if(Cur & PAD_RIGHT) {}
+#undef REL
+#undef TRG
     }
 
     ppu_wait_nmi();

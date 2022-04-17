@@ -1,4 +1,4 @@
-#include "../nes.h"
+#include "../fc.h"
 
 #define USE_SPLIT
 //#define USE_VRAM_BUFFER

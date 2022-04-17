@@ -6,7 +6,7 @@
         {
             "label": "Compile",
             "type": "shell",
-            "command": "cl65 -t nes -Oisr -c main.c"
+            "command": "cl65 -t nes -Oisr -c main.c -I C:/cc65-snapshot-win32/include"
         },
         {
             "label": "Link",

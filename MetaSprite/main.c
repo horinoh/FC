@@ -1,4 +1,4 @@
-#include "../nes.h"
+#include "../fc.h"
 
 #define SPR_ATTR_DEFAULT 0x0/*(OAM_FLIP_V | OAM_FLIP_H | OAM_BEHIND)*/
 #define OAM_ANIM_16X16(name, pattern, attr) const uint8_t name[] = {\

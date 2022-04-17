@@ -1,4 +1,4 @@
-#include "../nes.h"
+#include "../fc.h"
 
 #define USE_READ_VRAM
 
