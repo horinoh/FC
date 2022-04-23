@@ -179,4 +179,10 @@ asm("...");
 
 #define OAM_END_OF_META_SPR 128
 
+//!< サウンド
+#define SFX_CH0 0
+#define SFX_CH1 1
+#define SFX_CH2 2
+#define SFX_CH3 3
+
 #endif //!< _NES_H_

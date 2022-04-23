@@ -1,5 +1,7 @@
 #include "../fc.h"
 
+void nmi() { }
+
 void main() 
 {
   const uint8_t Palette[] = {
@@ -41,6 +43,9 @@ void main()
     //ppu_on_bg();
     //ppu_on_spr();
   }
+
+  //!< NMI コールバック
+  nmi_set_callback(nmi);
 
   while (1) {
     //!< フェード [0, 8]

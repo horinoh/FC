@@ -14,4 +14,6 @@
 @ar65 t neslib2.lib
 @popd
 
+@cl65 --verbose -t nes -Oisr -g -c famitone2.s
+
 @pause

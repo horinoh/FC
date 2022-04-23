@@ -12,6 +12,7 @@
         $cl65 -t none -c -O *.c
         $ld65 -o nes.rom --config build.cfg --obj *.o --lib nes.lib
         ~~~
+
 ### neslib を使用する場合
  - [neslib](https://github.com/clbr/neslib) を git サブモジュールとして追加した
     - 以下のようななバッチファイルでビルド
@@ -38,7 +39,9 @@
         @ar65 a neslib2.lib lz4vram.o pad.o rand.o memfill.o vram_read.o vram_unrle.o oam_meta_spr_clip.o oam_meta_spr_pal.o oam_meta_spr.o oam_spr.o oam_clear_fast.o split.o splitxy.o
         @popd
         ~~~
-
+## Famitone2
+ - [Famitone2](https://shiru.untergrund.net/code.shtml)
+ 
 ## バイナリデータ
  - XXX.s を用意し、アセンブル & リンクして使用
     ~~~
@@ -71,6 +74,7 @@
     // .c
     extern const uint8_t YYY[];
     ~~~
+
 ## 実行
 - [エミュレータ(nestopia)](http://nestopia.sourceforge.net/)
     - C:\Nestopia140bin を環境変数 Path に通しておく
