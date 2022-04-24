@@ -100,9 +100,9 @@ void main()
     //!< スクロールインしてくるタイルを書き換える
     if(0 < VX) {
       #if 1
-      TileX += NT_TILE_WIDTH2;
+      TileX += NT_TILE_WIDTH;
       #else
-      TileX += NT_TILE_WIDTH2 - 1; //!< 書き換えが見えるようにする場合
+      TileX += NT_TILE_WIDTH - 1; //!< 書き換えが見えるようにする場合
       #endif
 
       NT_TILE_WIDTH_LIMIT(TileX);

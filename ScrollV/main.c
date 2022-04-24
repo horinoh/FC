@@ -98,29 +98,26 @@ scroll(0, 30);
       TileY = (Y >> 3);
     }
 
-#if 1
     //!< スクロールインしてくるタイルを書き換える
     if(0 < VY) {
       #if 1
-      TileY += NT_TILE_HEIGHT2;
+      TileY += NT_TILE_HEIGHT - 1;
       #else
-      TileY += NT_TILE_HEIGHT2 - 1; //!< 書き換えが見えるようにする場合
+      TileY += NT_TILE_HEIGHT - 2; //!< 書き換えが見えるようにする場合
       #endif
 
       NT_TILE_HEIGHT_LIMIT(TileY);
       vrambuf_put_h(NTADR_HORZ(0, TileY), "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"); //!< 1つ足りなくしている(わざと)
     } else if(0 > VY) {
-      //!< エッジを隠さない設定の場合何もしない
       #if 1
-      TileY += 1; //!< エッジを隠す設定の場合 (エッジを隠さない設定で、書き換えが見えるようにする場合)
+      TileY += 1;
       #else
-      TileY += 2; //!< エッジを隠す設定で、書き換えが見えるようにする場合
+      TileY += 2; //!< 書き換えが見えるようにする場合
       #endif
 
       NT_TILE_HEIGHT_LIMIT(TileY);
       vrambuf_put_h(NTADR_HORZ(0, TileY), "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"); //!< 1つ足りなくしている(わざと)
     }
-#endif
 
     //!< スクロール
     scroll(0, Y);
