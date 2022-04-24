@@ -160,13 +160,20 @@ asm("...");
 
 #define NT_TILE_WIDTH 32
 #define NT_TILE_HEIGHT 30
+#define NT_TILE_WIDTH2 (NT_TILE_WIDTH << 1)
+#define NT_TILE_HEIGHT2 (NT_TILE_HEIGHT << 1)
+#define NT_TILE_WIDTH_LIMIT(x) while(x < 0) { x += NT_TILE_WIDTH2; } x &= (NT_TILE_WIDTH2 - 1)
+#define NT_TILE_HEIGHT_LIMIT(y) while(y < 0) { y += NT_TILE_HEIGHT2; } y %= NT_TILE_HEIGHT2
+
 #define NT_WIDTH (NT_TILE_WIDTH << 3)
 #define NT_HEIGHT (NT_TILE_HEIGHT << 3)
 #define NT_WIDTH2 (NT_WIDTH << 1)
 #define NT_HEIGHT2 (NT_HEIGHT << 1)
+#define NT_WIDTH_LIMIT(x) while(x < 0) { x += NT_WIDTH2; } x &= (NT_WIDTH2 - 1)
+#define NT_HEIGHT_LIMIT(y) while(y < 0) { y += NT_HEIGHT2; } y %= NT_HEIGHT2
 
-#define NTADR_VERT(x, y) x < 32 ? NTADR_A(x, y) : NTADR_B(x & 31, y)
-#define NTADR_HORZ(x, y) y < 30 ? NTADR_A(x, y) : NTADR_B(x, y % 30)
+#define NTADR_VERT(x, y) x < NT_TILE_WIDTH ? NTADR_A(x, y) : NTADR_B(x & (NT_TILE_WIDTH - 1), y)
+#define NTADR_HORZ(x, y) y < NT_TILE_HEIGHT ? NTADR_A(x, y) : NTADR_C(x, y % NT_TILE_HEIGHT)
 
 #define ATTR_LT(x) (x)
 #define ATTR_RT(x) ((x) << 2)

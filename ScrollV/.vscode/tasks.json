@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile",
+            "type": "shell",
+            "command": "cl65 -t nes -Oisr -c main.c -I C:/cc65-snapshot-win32/include"
+        },
+        {
+            "label": "Link",
+            "type": "shell",
+            "command": "ld65 -o nes.rom --config ../config/nrom_h.cfg -L C:/cc65-snapshot-win32/lib -L ../neslib2 --obj main.o ../resource/chr.o --lib neslib2.lib nes.lib"
+        },
+        {
+            "label": "Execute",
+            "type": "shell",
+            "command": "nestopia .\\nes.rom"
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm",
+            "args": [ 
+                "*.o",
+            ],
+        },
+        {
+            "label": "Build and execute",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Compile",
+                "Link",
+                "Execute"
+            ]
+        },
+    ]
+}

@@ -47,6 +47,14 @@ void main()
   //!< NMI コールバック
   nmi_set_callback(nmi);
 
+  //!< VRAM バッファ
+  {
+    VramBufferSize = 64;
+    VRAMBUF_CLEAR;
+    //!< VRAM バッファのアドレスを知らせておく
+    set_vram_update(VramBuffer);
+  }
+
   while (1) {
     //!< フェード [0, 8]
     //!< pal_bright(0) == ブラックアウト
