@@ -53,6 +53,9 @@ void main()
       if(Cur & PAD_DOWN) {}
       if(Cur & PAD_LEFT) {}
       if(Cur & PAD_RIGHT) {}
+
+      if(TRG(PAD_A)) {}
+      if(REL(PAD_A)) {}
 #undef REL
 #undef TRG
     }

@@ -1,0 +1,18 @@
+.segment "BANK0"
+.segment "BANK1"
+.segment "BANK2"
+.segment "BANK3"
+.segment "BANK4"
+.segment "BANK5"
+.segment "BANK6"
+
+.segment "CHAR0"
+.segment "CHAR1"
+.segment "CHAR2"
+.segment "CHAR3"
+.segment "CHAR4"
+.segment "CHAR5"
+.segment "CHAR6"
+.segment "CHAR7"
+
+.segment "XRAM"

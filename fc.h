@@ -74,6 +74,7 @@ void vrambuf_put_v(const uint16_t adr, register const char* str) { vrambuf_put(a
 
 //!< RLE
 #define RLE_TAG 0x1
+#define RLE_COUNT(x) RLE_TAG, x
 
 /*
 CPU

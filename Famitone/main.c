@@ -56,7 +56,7 @@ void main()
       pal_bright(Fade >> 4);
     }
 
-   //!< パッド
+    //!< パッド
     {
       const uint8_t Pre = pad_state(0);
       const uint8_t Cur = pad_poll(0);
