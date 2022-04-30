@@ -13,7 +13,7 @@
 
 //!< 6502 の割り込みフラグをクリア、これにより IQR が有効になる
 #define ENABLE_CPU_IRQ __asm__ ("cli")
-//!< この割込みが IQR か MNI か
+//!< この割込みが IQR か MNI か (IRQ の場合には A レジスタの上位ビットが立つ)
 #define IS_IRQ (__A__ & 0x80)
 
 #define MMC3_BANK_SEL 0x8000

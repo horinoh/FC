@@ -1,6 +1,6 @@
 #include "../fc.h"
 
-void nmi() { }
+void __fastcall__ nmi() { }
 
 void main() 
 {
