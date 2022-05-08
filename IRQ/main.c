@@ -27,13 +27,13 @@ void __fastcall__ nmi()
     ++IRQCount;
 
     //!< IRQ は一度発行されたら終わり、再度 IRQ を発行する為に Disable, Enable する必要がある
-    MMC3_IRQ_DISABLE();
-    MMC3_IRQ_ENABLE();
+    IRQ_DISABLE();
+    IRQ_ENABLE();
   } else {
     //!< [ NMI の場合 ]
     
     //!< IRQ でないのでカウンタはリロードされない、明示的にリロードする
-    MMC3_IRQ_RELOAD();
+    IRQ_RELOAD();
     
     IRQCount = 0;
   }
@@ -64,9 +64,9 @@ void main()
     MMC3_MIRROR_HORZ;
   
     //!< ここでは 8 スキャンライン毎に IRQ を発行する設定
-    MMC3_IRQ_SET_VALUE(7);
-    MMC3_IRQ_RELOAD();
-    MMC3_IRQ_ENABLE();
+    IRQ_SET_VALUE(7);
+    IRQ_RELOAD();
+    IRQ_ENABLE();
 
     //!< IRQ を有効にする
     ENABLE_CPU_IRQ;

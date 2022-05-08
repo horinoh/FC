@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <peekpoke.h>
 #include <nes.h>
+#include <stdlib.h>
 
 #include "mmc3.h"
 #include "apu.h"
@@ -158,6 +159,11 @@ asm("...");
 */
 
 #define COUNTOF(x) sizeof(x) / sizeof(x[0])
+
+#define PATTERN_TABLE_0 0x0000
+#define PATTERN_TABLE_1 0x1000
+#define PTADR_0(x) (PATTERN_TABLE_0 | ((x) << 4))
+#define PTADR_1(x) (PATTERN_TABLE_1 | ((x) << 4))
 
 #define NT_TILE_WIDTH 32
 #define NT_TILE_HEIGHT 30

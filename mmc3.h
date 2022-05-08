@@ -1,53 +1,47 @@
 #ifndef _MMC3_H_
 #define _MMC3_H_
 
-//!< MMC(Memory Management Controller) ... コンフィグファイルでMMC3を有効にしておく必要がある
-//!< スキャンラインをカウントして、指定のカウントで IQR を発行可能
-//!< レジスタA の値を任意のアドレスへ
-#define STROBE(adr) __asm__ ("sta %w", adr)
-#define MMC3_IRQ_SET_VALUE(n)   POKE(0xc000, (n));
-#define MMC3_IRQ_RELOAD()       STROBE(0xc001)
-#define MMC3_IRQ_DISABLE()      STROBE(0xe000)
-#define MMC3_IRQ_ENABLE()       STROBE(0xe001)
-#define MMC3_IRQ_RESET()        MMC3_IRQ_DISABLE();MMC3_IRQ_ENABLE()
+#define MMC3_PRG_RAM 0xa001
 
+//!< MMC(Memory Management Controller) ... コンフィグファイルでMMC3を有効にしておく必要がある
+//!< [ IRQ ]
+//!<    スキャンラインをカウントして、指定のカウントで IQR を発行可能
+//!< レジスタA の値を任意のアドレスへ
+#define MMC3_IRQ_LATCH 0xc000
+#define MMC3_IRQ_RELOAD 0xc001
+#define MMC3_IRQ_DISABLE 0xe000
+#define MMC3_IRQ_ENABLE 0xe001
+#define STROBE(adr) __asm__ ("sta %w", adr)
+#define IRQ_SET_VALUE(n)   POKE(MMC3_IRQ_LATCH, (n));
+#define IRQ_RELOAD()       STROBE(MMC3_IRQ_RELOAD)
+#define IRQ_DISABLE()      STROBE(MMC3_IRQ_DISABLE)
+#define IRQ_ENABLE()       STROBE(MMC3_IRQ_ENABLE)
 //!< 6502 の割り込みフラグをクリア、これにより IQR が有効になる
 #define ENABLE_CPU_IRQ __asm__ ("cli")
 //!< この割込みが IQR か MNI か (IRQ の場合には A レジスタの上位ビットが立つ)
 #define IS_IRQ (__A__ & 0x80)
 
+//!< [ バンク切替え ]
 #define MMC3_BANK_SEL 0x8000
 #define MMC3_BANK_DATA 0x8001
-#define MMC3_MIRRORING 0xa000
-#define MMC3_PRG_RAM 0xa001
-#define MMC3_IRQ_LATCH 0xc000
-// #define MMC3_IRQ_RELOAD 0xc001
-// #define MMC3_IRQ_DISABLE 0xe000
-// #define MMC3_IRQ_ENABLE 0xe001
-
 #define MMC_MODE 0x00
-#define MMC3_SET_REG(r, bank) POKE(MMC3_BANK_SEL, MMC_MODE | (r)); POKE(MMC3_BANK_DATA, (bank))
+#define MMC3_SET_REG(reg, bank) POKE(MMC3_BANK_SEL, MMC_MODE | (reg)); POKE(MMC3_BANK_DATA, (bank))
 
-/*
-#define MMC3_CHR_0000(n) MMC3_SET_REG(0, n)
-#define MMC3_CHR_0800(n) MMC3_SET_REG(1, n)
-#define MMC3_CHR_1000(n) MMC3_SET_REG(2, n)
-#define MMC3_CHR_1400(n) MMC3_SET_REG(3, n)
-#define MMC3_CHR_1800(n) MMC3_SET_REG(4, n)
-#define MMC3_CHR_1C00(n) MMC3_SET_REG(5, n)
-#define MMC3_PRG_8000(n) MMC3_SET_REG(6, n)
-#define MMC3_PRG_A000(n) MMC3_SET_REG(7, n)
-*/
+#define MMC3_CHR_0000(b) MMC3_SET_REG(0, b) //!< 0x0800 (2KB) 128 tiles
+#define MMC3_CHR_0800(b) MMC3_SET_REG(1, b) //!< 0x0800 (2KB)
+#define MMC3_CHR_1000(b) MMC3_SET_REG(2, b) //!< 0x0400 (1KB)
+#define MMC3_CHR_1400(b) MMC3_SET_REG(3, b) //!< 0x0400 (1KB)
+#define MMC3_CHR_1800(b) MMC3_SET_REG(4, b) //!< 0x0400 (1KB)
+#define MMC3_CHR_1C00(b) MMC3_SET_REG(5, b) //!< 0x0400 (1KB)
 
-#define MMC3_PRG_SELECT_BANK0 MMC3_SET_REG(6, 0)
-#define MMC3_PRG_SELECT_BANK1 MMC3_SET_REG(6, 1)
-#define MMC3_PRG_SELECT_BANK2 MMC3_SET_REG(6, 2)
+//!< [0x8000, 0x9fff] 0, 1, 2
+//!< [0xa000, 0xbfff] 3, 4, 5
+//!< [0xc000, 0xdfff], [0xe000, 0xffff] 最後の2バンクは固定
+#define MMC3_PRG_8000(b) MMC3_SET_REG(6, b) //!< 0x2000 (8KB)
+#define MMC3_PRG_A000(b) MMC3_SET_REG(7, b) //!< 0x2000 (8KB)
 
-#define MMC3_PRG_SELECT_BANK3 MMC3_SET_REG(7, 3)
-#define MMC3_PRG_SELECT_BANK4 MMC3_SET_REG(7, 4)
-#define MMC3_PRG_SELECT_BANK5 MMC3_SET_REG(7, 5)
-
-//!< ミラーリング
+//!< [ ミラーリング ]
+#define MMC3_MIRRORING 0xa000
 #define MMC3_MIRROR_VERT POKE(MMC3_MIRRORING, 0)
 #define MMC3_MIRROR_HORZ POKE(MMC3_MIRRORING, 1)
 
