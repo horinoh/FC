@@ -11,7 +11,7 @@
         {
             "label": "Link",
             "type": "shell",
-            "command": "ld65 -o nes.rom --config ../config/uxrom_charram.cfg -L C:/cc65-snapshot-win32/lib -L ../neslib2 --obj main.o --lib neslib2.lib nes.lib"
+            "command": "ld65 -L C:/cc65-snapshot-win32/lib -L ../neslib --obj main.o --lib neslib.lib nes.lib -o nes.rom --config ../config/uxrom_charram.cfg"
         },
         {
             "label": "Execute",

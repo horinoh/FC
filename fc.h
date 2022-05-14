@@ -12,11 +12,9 @@
 #include "mmc3.h"
 #include "apu.h"
 
-#define USE_NESLIB2
+//#define USE_OLD_NESLIB
 
-#ifdef USE_NESLIB2
-#include "../neslib2/neslib.h"
-#else
+#ifdef USE_OLD_NESLIB
 #include "../neslib/neslib.h"
 //!< oam_off
 #pragma bss-name (push,"ZEROPAGE")
@@ -24,14 +22,12 @@
 uint8_t oam_off;
 #pragma data-name(pop)
 #pragma bss-name (pop)
-#endif
-
-#ifndef USE_NESLIB2
-//!< PPU マスク
 #define MASK_TINT_RED		0x20
 #define MASK_TINT_BLUE		0x40
 #define MASK_TINT_GREEN		0x80
 #define MASK_MONO		0x01
+#else
+#include "../neslib/neslib.h"
 #endif
 
 void put_str(const uint16_t adr, const char* str) 

@@ -1,3 +1,6 @@
 [submodule "ImageConverter"]
 	path = ImageConverter
 	url = https://github.com/horinoh/ImageConverter.git
+[submodule "neslib"]
+	path = neslib
+	url = https://github.com/sehugg/neslib.git

@@ -14,6 +14,7 @@
         ~~~
 
 ### neslib を使用する場合
+<!--
  - [neslib](https://github.com/clbr/neslib) を git サブモジュールとして追加した
     - 以下のようななバッチファイルでビルド
         ~~~
@@ -31,12 +32,15 @@
         #pragma data-name(pop)
         #pragma bss-name (pop)
     ~~~
- - [neslib2](https://github.com/sehugg/neslib.git) を git サブモジュールとして追加した
+-->
+ - [neslib](https://github.com/sehugg/neslib.git) を git サブモジュールとして追加した
     - 以下のようなバッチファイルでビルド
         ~~~
-        @pushd neslib2
+        @pushd neslib
+        @del /q neslib.lib *.o
         @for %%i in (*.s) do @(cl65 --verbose -t nes -Oisr -g -c %%i)
-        @ar65 a neslib2.lib lz4vram.o pad.o rand.o memfill.o vram_read.o vram_unrle.o oam_meta_spr_clip.o oam_meta_spr_pal.o oam_meta_spr.o oam_spr.o oam_clear_fast.o split.o splitxy.o
+        @for %%i in (*.o) do @(ar65 a neslib2.lib %%i)
+        @ar65 t neslib.lib
         @popd
         ~~~
 ## Famitone2
