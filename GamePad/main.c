@@ -43,8 +43,8 @@ void main()
       const uint8_t Cur = pad_poll(0);
       const uint8_t Chg = Pre ^ Cur;
 
-#define TRG(x) (Chg & (x)) & (Cur & (x));
-#define REL(x) (Chg & (x)) & (Pre & (x));
+#define TRG(x) (Chg & (x)) & (Cur & (x))
+#define REL(x) (Chg & (x)) & (Pre & (x))
       if(Cur & PAD_A) {}
       if(Cur & PAD_B) {}
       if(Cur & PAD_SELECT) {}

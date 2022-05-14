@@ -11,7 +11,7 @@
         {
             "label": "Link",
             "type": "shell",
-            "command": "ld65 -o nes.rom --config ../config/mmc3_bank.cfg -L C:/cc65-snapshot-win32/lib -L ../neslib2 --obj ../bank/mmc3.o main.o ../resource/chr.o --lib neslib2.lib nes.lib"
+            "command": "ld65 -o nes.rom --config ../config/mmc3_bank.cfg -L C:/cc65-snapshot-win32/lib -L ../neslib2 --obj ../bank/mmc3.o main.o --lib neslib2.lib nes.lib"
         },
         {
             "label": "Execute",
