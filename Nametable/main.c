@@ -2,6 +2,10 @@
 
 #define USE_SPLIT
 
+#ifdef USE_SPLIT
+#define USE_SPLIT_XY
+#endif
+
 void main() 
 {
   const uint8_t Palette[] = {
@@ -119,9 +123,14 @@ void main()
 #ifdef USE_SPLIT
     //!< スプライト0 とBGパターンとのコリジョンを待ってから、x スクロール値をセットする(y スクロール値は無視される)
     //!< コリジョンを待つため、分割は画面上部の方が良く、画面下の方である程無駄に待つことになる、コリジョンが発生しないと何も描画されない事になるので注意
+    #ifdef USE_SPLIT_XY
+    //!< スプリットを使用しつつ、Y 方向にもスクロールさせたい場合は splitxy() を使う
+    splitxy(X, Y);
+    #else
     split(X, Y);
+    #endif
 #else
-    //!< スクロール
+    //!< (通常の)スクロール
     scroll(X, Y);
 #endif
 

@@ -3,6 +3,7 @@
 - [NESDEV](https://www.nesdev.org/)
 
 ## ビルド
+<!--
 - [コンパイラ(cc65)](https://cc65.github.io/)
     - 解凍して cc65-snapshot-win32 を Cドライブ直下に配置
     - C:\cc65-snapshot-win32\bin\ を環境変数 Path に通しておく
@@ -12,8 +13,9 @@
         $cl65 -t none -c -O *.c
         $ld65 -o nes.rom --config build.cfg --obj *.o --lib nes.lib
         ~~~
+-->
 
-### neslib を使用する場合
+### neslib
 <!--
  - [neslib](https://github.com/clbr/neslib) を git サブモジュールとして追加した
     - 以下のようななバッチファイルでビルド
@@ -83,13 +85,24 @@
 - [エミュレータ(nestopia)](http://nestopia.sourceforge.net/)
     - C:\Nestopia140bin を環境変数 Path に通しておく
     ~~~
-    $nestopia .\nes.rom
+    $nestopia .\main.nes
     ~~~
 
-- 初期設定のキー配置
-    - 方向 = Arrow Key
-    - B, A = Commna(,), Dot(.)
-    - セレクト, スタート = RightShift, Enter
+    - 初期設定のキー配置
+        - 方向 = Arrow Key
+        - B, A = Commna(,), Dot(.)
+        - セレクト, スタート = RightShift, Enter
+
+- [エミュレータ(fceux)](https://fceux.com/web/home.html)
+    - C:\qfceux-2.6.4-win64\bin を環境変数 Path に通しておく
+    ~~~
+    $qfceux main.nes
+    ~~~
+
+    - 初期設定のキー配置
+        - 方向 = Arrow Key
+        - B, A = D, F
+        - セレクト, スタート = S, Enter
 
 ## VS Code からのビルド、実行
  - ファイル - フォルダを開く で対象のフォルダを開く

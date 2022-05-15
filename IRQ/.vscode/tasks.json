@@ -6,23 +6,39 @@
         {
             "label": "Compile",
             "type": "shell",
-            "command": "cl65 -t nes -Oisr -c main.c -I C:/cc65-snapshot-win32/include"
+            "command": "cl65",
+            "args": [
+                "-t", "nes", "-Oisr", "-I", "C:/cc65-snapshot-win32/include",
+                "-c", "main.c",
+            ]
         },
         {
             "label": "Link",
             "type": "shell",
-            "command": "ld65 -L C:/cc65-snapshot-win32/lib -L ../neslib --obj main.o --lib neslib.lib nes.lib -o nes.rom --config ../config/mmc3.cfg --obj ../resource/chr.o"
+            "command": "ld65",
+            "args": [
+                "-L", "C:/cc65-snapshot-win32/lib", "-L", "../neslib",
+                "--obj", "main.o",
+                "--lib", "neslib.lib", "nes.lib",
+                "-o", "main.nes",
+                "--config", "../config/mmc3.cfg",
+                "--obj", "../resource/chr.o",
+            ]
         },
         {
             "label": "Execute",
             "type": "shell",
-            "command": "nestopia .\\nes.rom"
+            "command": "qfceux",
+            "args": [
+                "main.nes"
+            ]
         },
         {
             "label": "Clean",
             "type": "shell",
             "command": "rm",
             "args": [ 
+                "*.nes",
                 "*.o",
             ],
         },
