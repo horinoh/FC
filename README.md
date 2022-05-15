@@ -1,7 +1,9 @@
 # FC
 
-- [NESDEV](https://www.nesdev.org/)
-
+- 参考
+    - [NESDEV](https://www.nesdev.org/)
+    - [8bitworkshop](https://8bitworkshop.com/v3.9.0/?file=hello.c&platform=nes)
+    
 ## ビルド
 <!--
 - [コンパイラ(cc65)](https://cc65.github.io/)
