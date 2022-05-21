@@ -13,9 +13,9 @@
 .segment "CBANK01" ; バンク切替番号(8)
   .incbin	"../resource/character.chr" ; 8KB
 .segment "CBANK02" ; バンク切替番号(16 = 8 + 8) 
-  .incbin	"../resource/bg.chr" ; 4KB ... アルファベットは大文字のみ
+  .incbin	"../resource/jroatch.chr" ; 4KB 
 .segment "CBANK03" ; バンク切替番号(20 = 8 + 8 + 4)
-  .incbin	"../resource/character.chr" 
+  .incbin	"../resource/bg.chr" ; 4KB ... アルファベットは大文字のみ
 .segment "CBANK04"
 .segment "CBANK05"
 .segment "CBANK06" 
